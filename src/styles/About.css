@@ -1,0 +1,277 @@
+/* ---------- Hero Section ---------- */
+.about-hero {
+  text-align: center;
+  background: linear-gradient(160deg, #5A5448 0%, #6d6657 100%);
+  color: #f8f5ee;
+  padding: 120px 20px;
+  font-family: 'Poppins', sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 🌿 Soft pattern overlay (gives organic feel) */
+.about-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+  opacity: 0.07;
+  pointer-events: none;
+}
+
+/* ✨ Elegant text animation */
+.about-title {
+  font-size: 3.2rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 15px;
+  animation: fadeSlideDown 1s ease-out;
+}
+
+.about-subtitle {
+  font-size: 1.3rem;
+  opacity: 0.9;
+  line-height: 1.6;
+  max-width: 650px;
+  margin: 0 auto;
+  animation: fadeSlideUp 1s ease-out;
+}
+
+/* 🌸 Decorative underline for title */
+.about-title::after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 3px;
+  background-color: #d3b673;
+  margin: 18px auto 0;
+  border-radius: 2px;
+}
+
+/* 🔆 Subtle animation keyframes */
+@keyframes fadeSlideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 🌿 Responsive styling */
+@media (max-width: 768px) {
+  .about-title {
+    font-size: 2.2rem;
+  }
+
+  .about-subtitle {
+    font-size: 1.1rem;
+    padding: 0 15px;
+  }
+}
+
+/* ---------- Heritage Section ---------- */
+.about {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 70px;
+  padding: 100px 80px;
+  background: linear-gradient(180deg, #f8f5ee 0%, #f2efe7 100%);
+  flex-wrap: wrap;
+  transition: all 0.3s ease-in-out;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 🌿 Decorative light texture overlay */
+.about::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("https://www.transparenttextures.com/patterns/paper-fibers.png");
+  opacity: 0.06;
+  pointer-events: none;
+}
+
+/* ---------- Text Side ---------- */
+.about-content {
+  flex: 1;
+  max-width: 48%;
+  z-index: 1;
+  animation: fadeInLeft 1s ease;
+}
+
+.about-content h4 {
+  font-size: 0.95rem;
+  color: #5A5448;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.about-content h1 {
+  font-size: 2.5rem;
+  color: #37332A;
+  margin-bottom: 25px;
+  line-height: 1.3;
+  position: relative;
+}
+
+/* ✨ Subtle underline accent under main heading */
+.about-content h1::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 80px;
+  height: 3px;
+  background-color: #d3b673;
+  border-radius: 3px;
+}
+
+.about-content p,
+.about-content span {
+  font-size: 1.1rem;
+  color: #6b665a;
+  line-height: 1.8;
+  margin-bottom: 22px;
+  text-align: justify;
+}
+
+/* ---------- Image Side ---------- */
+.about-image {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeInRight 1s ease;
+}
+
+.about-image img {
+  width: 100%;
+  max-width: 620px;
+  border-radius: 18px;
+  object-fit: cover;
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.about-image img:hover {
+  transform: scale(1.04);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.18);
+}
+
+/* ---------- Animations ---------- */
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1024px) {
+  .about {
+    flex-direction: column-reverse;
+    padding: 70px 40px;
+    text-align: center;
+  }
+
+  .about-content {
+    max-width: 100%;
+  }
+
+  .about-content h1::after {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .about-image img {
+    max-width: 90%;
+  }
+
+  .about-content p,
+  .about-content span {
+    text-align: center;
+  }
+}
+
+
+/* ---------- Features Section ---------- */
+.features {
+  background-color: #f8f5ee;
+  text-align: center;
+  padding: 90px 60px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.features-heading {
+  font-size: 2.4rem;
+  color: #5A5448;
+  margin-bottom: 60px;
+  letter-spacing: 0.5px;
+}
+
+.feature-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1024px) {
+  .about {
+    flex-direction: column;
+    padding: 60px 40px;
+    text-align: center;
+  }
+
+  .about-content {
+    max-width: 100%;
+  }
+
+  .about-image img {
+    max-width: 90%;
+  }
+}
+
+@media (max-width: 600px) {
+  .about-title {
+    font-size: 2.2rem;
+  }
+
+  .about-subtitle {
+    font-size: 1rem;
+  }
+}

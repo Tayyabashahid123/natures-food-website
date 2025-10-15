@@ -1,38 +1,109 @@
+/* ---------- Global Reset ---------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ---------- Root Theme ---------- */
+:root {
+  --color-primary: #5A5448;     /* Deep earthy brown */
+  --color-accent: #d3b673;      /* Soft gold highlight */
+  --color-bg: #f8f5ee;          /* Warm cream background */
+  --color-text-dark: #37332A;   /* Natural dark text */
+  --color-text-light: #7A7569;  /* Subtle muted text */
+  --font-main: 'Poppins', 'Source Sans Pro', sans-serif;
+}
+
+/* ---------- App Wrapper ---------- */
 .App {
   text-align: center;
+  font-family: var(--font-main);
+  background-color: var(--color-bg);
+  color: var(--color-text-dark);
+  overflow-x: hidden;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* ---------- Link Styling ---------- */
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.3s ease;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+a:hover {
+  color: var(--color-accent);
 }
 
+/* ---------- Button Styling ---------- */
+button {
+  cursor: pointer;
+  font-family: var(--font-main);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+/* ---------- Smooth Page Transitions ---------- */
+section {
+  transition: all 0.3s ease-in-out;
+}
+
+/* ---------- App Header (Optional if using a landing hero) ---------- */
 .App-header {
-  background-color: #282c34;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  background: linear-gradient(160deg, #5A5448 0%, #6d6657 100%);
+  color: #f8f5ee;
   font-size: calc(10px + 2vmin);
-  color: white;
+  padding: 20px;
 }
 
-.App-link {
-  color: #61dafb;
+/* ---------- Animated Logo (Optional) ---------- */
+.App-logo {
+  height: 100px;
+  width: 100px;
+  margin-bottom: 20px;
+  animation: fadeIn 1s ease-in;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+/* ---------- Animations ---------- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Scrollbar Styling ---------- */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #e6e1d6;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4b453b;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  body {
+    font-size: 15px;
   }
-  to {
-    transform: rotate(360deg);
+
+  .App-header {
+    font-size: 1.2rem;
+    padding: 50px 20px;
   }
 }

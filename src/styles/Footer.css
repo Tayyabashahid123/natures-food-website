@@ -1,0 +1,152 @@
+.footer {
+  font-family: 'Poppins', 'Source Sans Pro', sans-serif;
+  background: linear-gradient(180deg, #5A5448 0%, #3f3a32 100%);
+  color: #f2f2f2;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 60px;
+  padding: 70px 80px 40px;
+  text-align: left;
+  line-height: 1.6;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.footer-row {
+  flex: 1 1 250px;
+  max-width: 280px;
+  min-width: 220px;
+}
+
+.footer-logo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #e6e6e6;
+  margin-bottom: 10px;
+}
+
+.footer-tagline {
+  font-size: 0.95rem;
+  opacity: 0.9;
+  color: #e8e6e2;
+  line-height: 1.5;
+}
+
+.footer-row h4 {
+  font-size: 1.15rem;
+  margin-bottom: 12px;
+  font-weight: 600;
+  color: #f2f2f2;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 5px;
+  display: inline-block;
+}
+
+.footer-link,
+.social-links a {
+  background: none;
+  border: none;
+  color: #e6e6e6;
+  text-align: left;
+  cursor: pointer;
+  margin: 6px 0;
+  display: block;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.footer-link:hover,
+.social-links a:hover {
+  color: #d3b673;
+  transform: translateX(5px);
+}
+
+.footer a {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.3s ease;
+}
+
+.footer a:hover {
+  color: #d3b673;
+}
+
+.social-links {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.footer p {
+  color: #e0dfdb;
+  font-size: 0.95rem;
+  margin: 6px 0;
+}
+
+.footer-bottom {
+  width: 100%;
+  text-align: center;
+  margin-top: 50px;
+  padding-top: 25px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  font-size: 0.85rem;
+  color: #ccc;
+}
+
+/* ✅ Tablets (Below 1024px) */
+@media (max-width: 1024px) {
+  .footer {
+    justify-content: center;
+    padding: 60px 40px;
+    gap: 40px;
+  }
+}
+
+/* ✅ Mobiles (Below 768px) */
+@media (max-width: 768px) {
+  .footer {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 30px;
+    padding: 50px 25px;
+  }
+
+  .footer-row {
+    max-width: 100%;
+  }
+
+  .footer-row h4 {
+    border: none;
+  }
+
+  .footer-link,
+  .social-links a {
+    text-align: center;
+  }
+
+  .footer-bottom {
+    margin-top: 30px;
+    font-size: 0.8rem;
+  }
+}
+
+/* ✅ Small Mobile (Below 480px) */
+@media (max-width: 480px) {
+  .footer {
+    padding: 40px 20px;
+  }
+
+  .footer-logo {
+    font-size: 1.5rem;
+  }
+
+  .footer-row h4 {
+    font-size: 1rem;
+  }
+
+  .footer p {
+    font-size: 0.9rem;
+  }
+}

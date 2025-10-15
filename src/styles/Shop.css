@@ -1,0 +1,81 @@
+.shop-container {
+  text-align: center;
+  padding: 60px 20px;
+  font-family: 'Poppins', sans-serif;
+  background-color: #f8f5ee;
+}
+
+.shop-header {
+  margin-bottom: 50px;
+}
+
+.shop-title {
+  font-size: 2.8rem;
+  color: #5A5448;
+  font-weight: 700;
+}
+
+.shop-subtitle {
+  color: #777;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.shop-grid {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.shop-item {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  width: 260px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.shop-item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+}
+
+.shop-item img {
+  width: 220px;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.shop-item h3 {
+  color: #5A5448;
+  margin: 10px 0 6px;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.shop-item p {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 15px;
+  min-height: 45px;
+}
+
+.shop-item button {
+  background-color: #5A5448;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.shop-item button:hover {
+  background-color: #7a715f;
+}
