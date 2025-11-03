@@ -36,7 +36,7 @@ export default function Contact() {
 
             <label>
                 Subject
-                <select name="subject">
+                <select name="subject" required defaultValue="">
                     <option value="" disabled>Choose an option</option>
                     <option value="order">Product/Order Question</option>
                     <option value="Wholesale">Wholesale & Partnership inquiry</option>
@@ -57,10 +57,10 @@ export default function Contact() {
           <div className="contact-detail">
             <h2>Contact Details</h2>
 
-            <p>
+            { <p>
               <strong>Email:</strong>{" "}
               <a href="mailto:naturesfood@gmail.com">naturesfood@gmail.com</a>
-            </p>
+            </p>}
 
             <p>
               <strong>Phone:</strong> 03219488975
@@ -71,8 +71,8 @@ export default function Contact() {
             </p>
 
             <div className="contact-socials">
-              <a href="#">🌿 Facebook</a>
-              <a href="#">📸 Instagram</a>
+              {/* <a href="#">🌿 Facebook</a> */}
+              {/* <a href="#">📸 Instagram</a> */}
             </div>
           </div>
         </div>

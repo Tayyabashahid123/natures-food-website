@@ -58,3 +58,25 @@
 .cart:hover {
   background-color: #5A5448;
 }
+
+.cart {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.cart-count {
+  position: absolute;
+  top: -8px;
+  right: -10px;
+  background-color: #c58940;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

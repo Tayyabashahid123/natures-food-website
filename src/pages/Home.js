@@ -40,12 +40,12 @@ export default function Home() {
         <section className="products-section">
             <h1>Shop Our Spices</h1>
             <div className="products-grid">
-                <Product SpiceImg={cumin} SpiceName="Cumin" SpicePrice="Rs 100" />
-                <Product SpiceImg={Spices} SpiceName="Mixed Spices" SpicePrice="Rs 250" />
-                <Product SpiceImg={turmeric} SpiceName="Turmeric" SpicePrice="Rs 200" />
-                <Product SpiceImg={chilliPowder} SpiceName="Chilli Powder" SpicePrice="Rs 150" />
-                <Product SpiceImg={BlackPepper} SpiceName="Black Pepper" SpicePrice="Rs 180" />
-                <Product SpiceImg={Cloves} SpiceName="Cloves" SpicePrice="Rs 300" />
+                <Product SpiceImg={cumin} SpiceName="Cumin" SpicePrice="100" />
+                <Product SpiceImg={Spices} SpiceName="Mixed Spices" SpicePrice="250" />
+                <Product SpiceImg={turmeric} SpiceName="Turmeric" SpicePrice="200" />
+                <Product SpiceImg={chilliPowder} SpiceName="Chilli Powder" SpicePrice="150" />
+                <Product SpiceImg={BlackPepper} SpiceName="Black Pepper" SpicePrice="180" />
+                <Product SpiceImg={Cloves} SpiceName="Cloves" SpicePrice="300" />
             </div>
             <Link to="/shop">
                 <button className="shop-btn">Shop More</button>

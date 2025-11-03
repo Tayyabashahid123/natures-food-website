@@ -2,8 +2,12 @@ import "../styles/Navbar.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 
 export default function Navbar() {
+  const { getCartCount } = useCart(); // ✅ enable context
+  const itemCount = getCartCount();
+
   return (
     <header className="navbar">
       <Link to="/" className="logo">
@@ -23,9 +27,10 @@ export default function Navbar() {
         <Link to="/contact" className="nav-link">
           Contact
         </Link>
-        <button className="nav-link cart">
+        <Link to="/cart" className="nav-link cart">
           <FontAwesomeIcon icon={faCartShopping} />
-        </button>
+          {itemCount > 0 && <span className="cart-count">{itemCount}</span>}
+        </Link>
       </nav>
     </header>
   );
