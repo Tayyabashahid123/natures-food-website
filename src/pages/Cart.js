@@ -5,7 +5,7 @@ import { useCart } from "../context/CartContext";
 import "../styles/Cart.css";
 
 export default function Cart() {
-  const { cart, addToCart, decreaseQuantity, removeFromCart } = useCart();
+  const { cart, addToCart, decreaseFromCart, removeFromCart } = useCart();
 
   // Empty cart view
   if (!cart || cart.length === 0) {
@@ -37,7 +37,7 @@ export default function Cart() {
           <h2>Your Cart</h2>
 
           <div className="cart-items">
-            {cart.map((item) => (
+            {cart.sort((a, b) => b.id - a.id).map((item) => (
               <div className="cart-item" key={item.id}>
                 <img
                   src={item.image}
@@ -47,7 +47,7 @@ export default function Cart() {
 
                 <div className="cart-item-details">
                   <h3>{item.name}</h3>
-                  {item.price && <p>Rs {item.price}</p>}
+                  {item.price && <p>Rs {item.price * item.quantity}</p>}
 
                   <div className="cart-item-controls">
                     <button
@@ -60,7 +60,7 @@ export default function Cart() {
                     <div className="quantity-controls">
                       <button
                         className="decrease-btn"
-                        onClick={() => decreaseQuantity(item.id)}
+                        onClick={() => decreaseFromCart(item.id)}
                         aria-label={`Decrease quantity of ${item.name}`}
                       >
                         −
@@ -70,7 +70,7 @@ export default function Cart() {
 
                       <button
                         className="add-btn"
-                        onClick={() => addToCart(item)}
+                        onClick={() => addToCart(item, item.quantity)}
                         aria-label={`Increase quantity of ${item.name}`}
                       >
                         +

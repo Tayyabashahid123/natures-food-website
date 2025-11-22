@@ -170,6 +170,7 @@
   top: 100px;
   align-self: flex-start;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  margin-top: 50px;
 }
 
 .cart-summary h3 {

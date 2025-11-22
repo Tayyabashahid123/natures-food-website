@@ -1,0 +1,5 @@
+[
+  { "name": "Cumin", "price": 100, "image": "/images/cumin.jpeg" },
+  { "name": "Turmeric", "price": 200, "image": "/images/turmeric.jpeg" },
+  {  "name": "Black Pepper", "price": 180, "image": "/images/blackpepper.jpeg" }
+]

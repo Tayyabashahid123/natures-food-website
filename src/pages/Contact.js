@@ -25,8 +25,8 @@ export default function Contact() {
           {/* 📝 Form Section */}
           <div className="contact-inputs">
             <label>
-              Full Name
-              <input name="name" placeholder="Enter your full name" />
+              Name
+              <input name="name" placeholder="Enter your name" />
             </label>
 
             <label>
@@ -35,19 +35,8 @@ export default function Contact() {
             </label>
 
             <label>
-                Subject
-                <select name="subject" required defaultValue="">
-                    <option value="" disabled>Choose an option</option>
-                    <option value="order">Product/Order Question</option>
-                    <option value="Wholesale">Wholesale & Partnership inquiry</option>
-                    <option value="Feedback">Sourcing & Quality Feedback</option>
-                    <option value="General">General inquiry</option>
-                </select>
-            </label>
-
-            <label>
-              Your Message
-              <textarea name="message" placeholder="Write your message here..." />
+              Your Comment
+              <textarea name="comment" placeholder="Write your comment here..." />
             </label>
 
             <button className="contact-btn">Send Message</button>

@@ -1,0 +1,199 @@
+/* Overlay */
+.cart-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* Modal */
+.cart-modal {
+  background: #fff;
+  width: 850px;
+  max-width: 95%;
+  padding: 25px;
+  border-radius: 12px;
+  position: relative;
+  animation: pop 0.25s ease-out;
+}
+
+/* Close button */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: 22px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: #333;
+}
+
+/* Main layout */
+.cart-modal-inner {
+  display: flex;
+  justify-content: space-between;
+  gap: 35px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+/* Left side (added item details) */
+.left {
+  flex: 1.3;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.status h2 {
+  font-size: 21px;
+  color: #13803d;
+  margin: 0;
+}
+
+/* Product preview */
+.product-row {
+  margin-top: 22px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.modal-img {
+  width: 140px;
+  height: 140px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.modal-details h3 {
+  margin: 0 0 5px 0;
+  font-size: 19px;
+}
+
+/* Summary card */
+.summary {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.summary-card {
+  background: #fafafa;
+  padding: 20px;
+  width: 260px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.summary-line {
+  font-size: 17px;
+  margin: 10px 0;
+}
+
+.label {
+  font-weight: 600;
+}
+
+.value {
+  float: right;
+  font-weight: 700;
+}
+
+/* Buttons */
+.view-cart-btn,
+.continue-btn {
+  width: 100%;
+  padding: 11px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.view-cart-btn {
+  border: none;
+  background: #28a745;
+  color: #fff;
+}
+
+.continue-btn {
+  border: 1px solid #ddd;
+  background: #fff;
+}
+
+/* ✅ Recommended section */
+.recommended {
+  margin-top: 30px;
+  width: 100%;
+}
+
+.recommended h3 {
+  font-size: 19px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.recommended-list {
+  display: flex;
+  gap: 25px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  padding-bottom: 10px;
+  align-items: center;
+}
+
+.rec-card {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  width: 150px;
+  padding: 12px;
+  text-align: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.rec-card img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.rec-card p {
+  font-size: 15px;
+  margin: 6px 0 2px;
+  font-weight: 500;
+}
+
+.rec-card span {
+  font-size: 14px;
+  color: #444;
+}
+
+.rec-card button {
+  margin-top: 8px;
+  width: 100%;
+  background: #28a745;
+  border: none;
+  padding: 7px 0;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* Pop animation */
+@keyframes pop {
+  from { transform: scale(0.92); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}

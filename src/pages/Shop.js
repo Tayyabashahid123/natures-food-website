@@ -1,14 +1,24 @@
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { useCart } from "../context/CartContext";
 import "../styles/Shop.css";
-import Spices from "../assets/spices.jpeg";
-import cumin from "../assets/cumin.jpeg";
-import turmeric from "../assets/turmeric.jpeg";
-import chilliPowder from "../assets/chilli-powder.jpeg";
-import blackPepper from "../assets/blackpepper.jpeg";
-import cloves from "../assets/cloves.jpeg";
 
 export default function Shop() {
+
+  const [products, setProducts] = useState([]);
+  const { addToCart } = useCart();
+
+  useEffect(() => {
+    fetch("http://localhost:5000/api/products")
+      .then((res) => res.json())
+      .then((data) => setProducts(data))
+      .catch((err) => console.log(err));
+
+    }, []);
+
+
   return (
     <>
       <Navbar />
@@ -23,48 +33,26 @@ export default function Shop() {
         </div>
 
         <div className="shop-grid">
-          <div className="shop-item">
-            <img src={turmeric} alt="Turmeric" />
-            <h3>Turmeric Powder</h3>
-            <p>Pure, golden, and aromatic — the essence of health.</p>
-            <button>View</button>
-          </div>
+          {products.length === 0 ? (
+            <p className="loading">Loading products...</p>
+          ) : (
+            products.map(product => (
+               <Link to={`/product/${product._id}`} key={product._id}>
+              <div className="shop-item" >
+                <img src={product.image} alt={product.name} />
+                <h3>{product.name}</h3>
+                <p>Rs {product.price}</p>
+                {/* <button onClick={() => addToCart(product)}>Add to Cart</button>  */}
+                <button>View</button>
 
-          <div className="shop-item">
-            <img src={chilliPowder} alt="Chili Powder" />
-            <h3>Kashmiri Chili</h3>
-            <p>Bold, fiery flavor that awakens every dish.</p>
-            <button>View</button>
-          </div>
-
-          <div className="shop-item">
-            <img src={cumin} alt="Cumin Seeds" />
-            <h3>Cumin Seeds</h3>
-            <p>Earthy aroma with a hint of warmth and tradition.</p>
-            <button>View</button>
-          </div>
-
-          <div className="shop-item">
-            <img src={blackPepper} alt="Black Pepper" />
-            <h3>Black Pepper</h3>
-            <p>Strong and bold — freshly ground perfection.</p>
-            <button>View</button>
-          </div>
-
-          <div className="shop-item">
-            <img src={cloves} alt="Cloves" />
-            <h3>Cloves</h3>
-            <p>Sweet and spicy warmth, perfect for rich meals.</p>
-            <button>View</button>
-          </div>
-
-          <div className="shop-item">
-            <img src={Spices} alt="Garam Masala" />
-            <h3>Garam Masala</h3>
-            <p>A perfect balance of aroma, heat, and flavor.</p>
-            <button>View</button>
-          </div>
+              </div>
+                </Link> 
+            ))
+          )}
         </div>
+
+
+
       </section>
 
       <Footer />

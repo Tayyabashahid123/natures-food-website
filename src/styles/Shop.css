@@ -61,15 +61,15 @@
 .shop-item p {
   font-size: 0.9rem;
   color: #666;
-  margin-bottom: 15px;
-  min-height: 45px;
+  /* margin-bottom: 15px; */
+  min-height: 40px;
 }
 
 .shop-item button {
   background-color: #5A5448;
   color: white;
   border: none;
-  padding: 8px 16px;
+  padding: 12px 20px;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;

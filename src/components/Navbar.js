@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 
 export default function Navbar() {
-  const { getCartCount } = useCart(); // ✅ enable context
+  const { getCartCount } = useCart();
   const itemCount = getCartCount();
 
   return (
