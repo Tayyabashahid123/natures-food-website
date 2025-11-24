@@ -55,10 +55,10 @@ export default function Dashboard() {
   // Metrics
   const totalSales = orders.reduce((sum, o) => sum + o.totalAmount, 0);
   const totalOrders = orders.length;
-  const pendingOrders = orders.filter(o => o.status === "Pending").length;
-  const avgOrderValue = totalOrders ? (totalSales / totalOrders).toFixed(2) : 0;
-  const totalProductsSold = orders.reduce((sum, o) => sum + o.items.reduce((s, i) => s + i.quantity, 0), 0);
-
+  const pendingOrders = orders.filter(o => o.status === "pending").length;
+  const avgOrderValue = pendingOrders ? (totalSales / pendingOrders).toFixed(2) : 0;
+  const totalProductsSold = orders.filter(o => o.status === "completed").reduce((sum, o) => sum + o.items.reduce((s, i) => s + i.quantity, 0), 0);
+  
   // Recent orders (latest 5)
   const recentOrders = orders.slice(0, 5);
 
@@ -91,7 +91,7 @@ export default function Dashboard() {
       {/* Metrics Cards */}
       <div className="metrics-cards" style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
         <div className="card">Total Sales: Rs {totalSales}</div>
-        <div className="card">Total Orders: {totalOrders}</div>
+        {/* <div className="card">Total Orders: {totalOrders}</div> */}
         <div className="card">Pending Orders: {pendingOrders}</div>
         <div className="card">Average Order Value: Rs {avgOrderValue}</div>
         <div className="card">Products Sold: {totalProductsSold}</div>

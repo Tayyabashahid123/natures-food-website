@@ -7,6 +7,9 @@ export default function OrdersList() {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
   const [customerName, setCustomerName] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("");
+  const [customerAddress, setCustomerAddress] = useState("");
+  const [discount, setDiscount] = useState(0);
   const [productSearch, setProductSearch] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("cash");
   const [showAddOrder, setShowAddOrder] = useState(false);
@@ -74,7 +77,8 @@ export default function OrdersList() {
 
   const subtotal = cart.reduce((sum, item) => sum + item.total, 0);
   const tax = subtotal * 0;
-  const totalAmount = subtotal + tax;
+  var totalAmount = subtotal + tax;
+  totalAmount = (totalAmount - (totalAmount * discount/100));
 
   // Submit new order
   const submitOrder = () => {
@@ -87,9 +91,11 @@ export default function OrdersList() {
       },
       body: JSON.stringify({
         customerName,
+        customerPhone,
+        customerAddress,
         items: cart,
         subtotal,
-        discount: 0,
+        discount: discount,
         tax,
         totalAmount,
         paymentMethod
@@ -100,6 +106,8 @@ export default function OrdersList() {
         alert("Order created successfully!");
         setCart([]);
         setCustomerName("");
+        setCustomerPhone("");
+        setCustomerAddress("");
         setShowAddOrder(false);
         fetchOrders();
       })
@@ -117,6 +125,7 @@ export default function OrdersList() {
             <th>Customer</th>
             <th>Total</th>
             <th>Method</th>
+            <th>Discount </th>
             <th>Status</th>
             <th>Date</th>
             <th></th>
@@ -128,6 +137,7 @@ export default function OrdersList() {
               <td>{o.customerName || "Walk-in"}</td>
               <td>Rs {o.totalAmount}</td>
               <td>{o.paymentMethod}</td>
+              <td>{o.discount}%</td>
               <td>{o.status}</td>
               <td>{new Date(o.createdAt).toLocaleString()}</td>
               <td>
@@ -158,11 +168,26 @@ export default function OrdersList() {
           </div>
 
           <div className="form-row">
+            <label>Customer Phone:</label>
+            <input value={customerPhone} onChange={e => setCustomerPhone(e.target.value)} />
+          </div>
+
+          <div className="form-row">
+            <label>Customer Address:</label>
+            <input value={customerAddress} onChange={e => setCustomerAddress(e.target.value)} />
+          </div>
+
+          <div className="form-row">
             <label>Payment Method:</label>
             <select value={paymentMethod} onChange={e => setPaymentMethod(e.target.value)}>
               <option value="cash">Cash</option>
               <option value="online">Online</option>
             </select>
+          </div>
+
+          <div className="form-row">
+            <label>Discount:</label>
+            <input value={discount} onChange={e => setDiscount(e.target.value)} />
           </div>
 
           <h4>Products</h4>
@@ -222,6 +247,7 @@ export default function OrdersList() {
               </div>
 
               <p>Subtotal: Rs {subtotal}</p>
+              <p> Discount: {discount}% ({subtotal * discount/100}) </p>
               <h4>Total: Rs {totalAmount}</h4>
 
               <button className="submit-btn" onClick={submitOrder}>Submit Order</button>

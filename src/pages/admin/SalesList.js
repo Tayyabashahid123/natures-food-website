@@ -28,7 +28,9 @@ export default function SalesList() {
         <thead>
           <tr>
             <th>Customer</th>
-            <th>Total</th>
+            <th> Subtotal</th>
+            <th>Discount</th>
+            <th>Total Amount</th>
             <th>Method</th>
             <th>Date</th>
             <th></th>
@@ -39,6 +41,8 @@ export default function SalesList() {
           {sales.map(s => (
             <tr key={s._id}>
               <td>{s.customerName || "Walk-in"}</td>
+              <td> {s.subtotal} </td>
+              <td>Rs {s.subtotal * s.discount/100} ({s.discount}%)</td>
               <td>Rs {s.totalAmount}</td>
               <td>{s.paymentMethod}</td>
               <td>{new Date(s.createdAt).toLocaleString()}</td>

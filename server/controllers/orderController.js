@@ -6,6 +6,8 @@ exports.createOrder = async (req, res) => {
   try {
     const {
       customerName = "Walk-in",
+      customerPhone,
+      customerAddress,
       items,
       subtotal,
       discount = 0,
@@ -31,6 +33,8 @@ exports.createOrder = async (req, res) => {
     // Create order
     const order = new Order({
       customerName,
+      customerPhone,
+      customerAddress,
       items,
       subtotal,
       discount,

@@ -76,11 +76,16 @@ export default function OrderDetails() {
   if (error) return <p style={{ color: "red" }}>{error}</p>;
   if (!order) return <p>Order not found</p>;
 
+
+
+  console.log("order detail", order)
   return (
     <div className="page">
       <h2>Order Details</h2>
 
       <p><strong>Customer:</strong> {order.customerName || "Walk-in"}</p>
+      <p><strong> Customer Phone Number: </strong> {order.customerPhone} </p>
+      <p><strong> Customer Phone Address: </strong> {order.customerAddress} </p>
       <p><strong>Payment:</strong> {order.paymentMethod}</p>
       <p>
         <strong>Status:</strong>{" "}
@@ -104,6 +109,7 @@ export default function OrderDetails() {
 
       <p><strong>Date:</strong> {new Date(order.createdAt).toLocaleString()}</p>
 
+      <br/>
       <h3>Items</h3>
       <table className="table">
         <thead>
@@ -111,6 +117,7 @@ export default function OrderDetails() {
             <th>Name</th>
             <th>Qty</th>
             <th>Price</th>
+            <th>Discount</th>
             <th>Total</th>
           </tr>
         </thead>
@@ -121,13 +128,17 @@ export default function OrderDetails() {
               <td>{item.name}</td>
               <td>{item.quantity}</td>
               <td>Rs {item.price}</td>
-              <td>Rs {item.total}</td>
+              <td>Rs {item.price * order.discount/100}</td>
+              <td>Rs {item.total - item.price * order.discount/100 }</td>
             </tr>
           ))}
         </tbody>
       </table>
 
       <hr />
+      <br/>
+      <h3> Subtotal: {order.subtotal} </h3>
+      <h3> Discount: {order.discount}% ( {order.subtotal * order.discount/100})</h3>
       <h3>Total Amount: Rs {order.totalAmount}</h3>
     </div>
   );
