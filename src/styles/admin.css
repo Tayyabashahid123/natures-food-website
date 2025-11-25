@@ -465,3 +465,55 @@
 .table tr {
   line-height: 1 !important;    /* makes rows tighter */
 }
+
+
+
+
+/* ---------------------- packing page ---------------------- */
+
+.packing-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.heading {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.controls input {
+  flex: 1;
+  padding: 8px;
+  font-size: 14px;
+}
+
+.controls select {
+  padding: 8px;
+  font-size: 14px;
+}
+
+.packing-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.packing-table th, .packing-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.packing-table th {
+  background-color: #f2f2f2;
+}
+
+.packing-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+

@@ -41,6 +41,11 @@ export default function AdminLayout() {
             <Link to="/admin/orders" className={isActive("/admin/orders")}>
                 Orders
             </Link>
+            {/*Packing */}
+            <Link to="/admin/packing" className={isActive("/admin/packing")}>
+                Packing
+            </Link>
+
             {/* SALES */}
             <Link to="/admin/sales" className={isActive("/admin/sales")}>
                 Sales
