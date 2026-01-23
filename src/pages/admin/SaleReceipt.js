@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import "../../styles/admin/SaleReceipt.css";
 
 export default function SaleReceipt() {
   const { id } = useParams();
@@ -8,117 +9,167 @@ export default function SaleReceipt() {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    // ENABLE PRINT MODE
     document.body.classList.add("print-receipt");
 
     fetch(`http://localhost:5000/api/orders/${id}`, {
       headers: { "x-auth-token": token }
     })
-      .then(async (res) => {
-        const text = await res.text();
-        try {
-          return JSON.parse(text);
-        } catch {
-          throw new Error("Invalid JSON: " + text);
-        }
-      })
-      .then((data) => {
-        if (data.status !== "completed") {
-          setError("This order is not a completed sale.");
+      .then(res => res.json())
+      .then(data => {
+        if (!["completed", "returned"].includes(data.status)) {
+          setError("This order cannot be printed.");
           return;
         }
         setSale(data);
       })
-      .catch(() => setError("Failed to fetch sale"));
+      .catch(() => setError("Failed to fetch receipt"));
 
     return () => {
-      // DISABLE PRINT MODE WHEN LEAVING THE PAGE
       document.body.classList.remove("print-receipt");
     };
   }, [id, token]);
 
   const printReceipt = () => window.print();
 
+  const returnSale = async () => {
+    if (!window.confirm("Are you sure you want to return this sale?")) return;
+
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/orders/${id}/return`,
+        {
+          method: "PATCH",
+          headers: {
+            "x-auth-token": token
+          }
+        }
+      );
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
+
+      setSale(data.order);
+      alert("Sale returned successfully");
+    } catch (err) {
+      alert(err.message || "Return failed");
+    }
+  };
+
+
   if (error) return <p style={{ color: "red" }}>{error}</p>;
   if (!sale) return <p>Loading receipt...</p>;
 
-  console.log(sale)
+  const isReturn = sale.status === "returned";
+
+  const profitPercent = Number(sale.profit || 0);
+  const discountPercent = Number(sale.discount || 0);
+
+  const items = sale.items.map(item => {
+    const baseTotal = item.price * item.quantity;
+    const profitAmount = baseTotal * (profitPercent / 100);
+    const totalWithProfit = baseTotal + profitAmount;
+    const discountAmount = totalWithProfit * (discountPercent / 100);
+
+    return {
+      ...item,
+      finalTotal: totalWithProfit - discountAmount
+    };
+  });
+
+  const subtotal = items.reduce((s, i) => s + i.finalTotal, 0);
+
   return (
     <>
-      <button className="print-btn" onClick={printReceipt}>Print Receipt</button>
-    <div className="receipt-container">
+      <div style={{ marginBottom: "10px" }}>
+        <button className="print-btn" onClick={printReceipt}>
+          Print {isReturn ? "Return Receipt" : "Receipt"}
+        </button>
 
-
-      <div className="company-detail">
-        <h2> Nature's Food</h2>
-        <span> <em> Commercial Canal City, Lahore, Punjab </em></span>
-        <br/>
-        <span> <em>03219488975 </em></span>
-
-        <br/>
-        <h2> Invoice</h2>
+        {!isReturn && (
+          <button
+            className="return-btn"
+            onClick={returnSale}
+            style={{ marginLeft: "10px", background: "red", color: "white" }}
+          >
+            Return Sale
+          </button>
+        )}
       </div>
 
-      <div className="sale-detail">
-      <p><strong>Customer:</strong> {sale.customerName || "Walk-in"}</p>
-      <p><strong>Payment Method:</strong> {sale.paymentMethod}</p>
-      <p><strong>Cashier:</strong> Admin</p>
-      <p><strong>Date:</strong> {new Date(sale.createdAt).toLocaleString()}</p>
-      <br/>
-      </div>
 
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Sr#</th>
-            <th>Item Name</th>
-            <th>Price</th>
-            <th>Qty</th>
-            <th> Discount</th>
-            <th>Total</th>
-          </tr>
-        </thead>
+      <div className="receipt-container">
 
-        <tbody>
-          {sale.items.map((item, index) => (
-            <tr key={item.productId}>
-              <td>{index + 1}</td>
-              <td>{item.name}</td>
-              <td>Rs {item.price}</td>
-              <td>{item.quantity}</td>
-              <td>Rs {item.total * sale.discount/100}</td>
-              <td>Rs {item.total -(item.total * sale.discount/100)}</td>
-            </tr>
-          ))}
-        </tbody>
+        {/* HEADER */}
+        <div className={`company-detail ${isReturn ? "return" : ""}`}>
+          <h1>Nature's Food</h1>
+          <p>Commercial Canal City, Lahore</p>
+          <p>📞 0321-9488975</p>
 
-        <tbody>
-          {sale.items.map((item, index) => (
-            <tr key={item.productId}>
-              <td>{index + 1}</td>
-              <td>{item.name}</td>
-              <td>Rs {item.price}</td>
-              <td>{item.quantity}</td>
-              <td>Rs {item.total * sale.discount/100}</td>
-              <td>Rs {item.total -(item.total * sale.discount/100)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <hr />
-
-    <div className="payment-detail">
-      <p><strong>Total:</strong> <span>Rs {sale.subtotal}</span></p>
-      <p><strong>Discount:</strong> <span>Rs {sale.subtotal * sale.discount / 100}</span></p>
-      <p><strong>Paid:</strong> <span>Rs {sale.totalAmount}</span></p>
-    </div>
-
-
-        <div className="thankyou-note">
-          <p> <em> Thank you for shopping with us. </em> </p>
-          <p>  <em>Discounted Items cannot be returned or refunded. Please bring orignal invoice for returns.</em></p>
+          <h2>{isReturn ? "SALE RETURN" : "INVOICE"}</h2>
         </div>
-    </div>
+
+        <hr />
+
+        {/* INFO */}
+        <div className="sale-detail">
+          <div>
+            <p><strong>Customer:</strong> {sale.customerName || "Walk-in"}</p>
+            <p><strong>Payment:</strong> {sale.paymentMethod}</p>
+          </div>
+          <div>
+            <p><strong>Cashier:</strong> Admin</p>
+            <p><strong>Date:</strong> {new Date(sale.createdAt).toLocaleString()}</p>
+          </div>
+        </div>
+
+        {/* TABLE */}
+        <table className="table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Item</th>
+              <th>Qty</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {items.map((item, i) => (
+              <tr key={item.productId}>
+                <td>{i + 1}</td>
+                <td>{item.name}</td>
+                <td>{item.quantity}</td>
+                <td>
+                  Rs {isReturn ? `-${item.finalTotal.toFixed(2)}` : item.finalTotal.toFixed(2)}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <hr />
+
+        {/* TOTAL */}
+        <div className="payment-detail">
+          <p className="grand-total">
+            <span>{isReturn ? "Refunded Amount" : "Final Paid"}</span>
+            <span>
+              Rs {isReturn ? `-${subtotal.toFixed(2)}` : subtotal.toFixed(2)}
+            </span>
+          </p>
+        </div>
+
+        <hr />
+
+        {/* FOOTER */}
+        <div className="thankyou-note">
+          {isReturn ? (
+            <p><strong>Sale Returned Successfully</strong></p>
+          ) : (
+            <p>Thank you for shopping with us ❤️</p>
+          )}
+        </div>
+
+      </div>
     </>
   );
 }

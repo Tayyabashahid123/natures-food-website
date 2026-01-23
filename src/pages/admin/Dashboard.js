@@ -53,7 +53,7 @@ export default function Dashboard() {
   if (error) return <p style={{ color: "red" }}>{error}</p>;
 
   // Metrics
-  const totalSales = orders.reduce((sum, o) => sum + o.totalAmount, 0);
+  const totalSales = orders.reduce((sum, o) => sum + o.totalAmount, 0).toFixed(2);
   const totalOrders = orders.length;
   const pendingOrders = orders.filter(o => o.status === "pending").length;
   const avgOrderValue = pendingOrders ? (totalSales / pendingOrders).toFixed(2) : 0;
@@ -85,7 +85,7 @@ export default function Dashboard() {
       {/* Admin Info */}
       <div style={{ marginBottom: "20px" }}>
         <h2>Sales Dashboard</h2>
-        <p>Welcome, <strong>{adminEmail}</strong></p>
+        <p>Welcome back, <strong>Ahmad</strong></p>
       </div>
 
       {/* Metrics Cards */}

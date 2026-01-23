@@ -228,6 +228,7 @@
   border-radius: 4px;
   cursor: pointer;
   transition: 0.2s;
+  margin: 5px;
 }
 
 .view-btn:hover {
@@ -371,104 +372,6 @@
 
 
 
-/* HIDE ADMIN LAYOUT WHEN PRINTING */
-@media print {
-  .admin-sidebar,
-  .admin-nav,
-  .logout-button,
-  .admin-main> *:not(.receipt-container) {
-    display: none !important;
-  }
-
-  .admin-main {
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-  .receipt-container {
-    width: 100% !important;
-    padding: 20px !important;
-    margin: 0 !important;
-  }
-
-    * {
-    overflow: visible !important;
-  }
-}
-
-/* NORMAL (SCREEN) MODE */
-.print-receipt .admin-sidebar {
-  display: none !important;
-}
-
-.print-receipt .admin-main {
-  margin-left: 0 !important;
-  width: 100% !important;
-}
-
-.company-detail{
-  text-align: center;
-  line-height: 1.3;
-}
-
-.payment-detail{
-  text-align: right;
-  margin-right: 30px;
-  padding-right: 30px;
-}
-
-.sale-detail{
-  line-height: 1.3;
-  margin-left: 15px;
-}
-
-.print-btn {
-  cursor: pointer;
-  border: 2px solid transparent; /* Transparent border to prevent layout shifts on hover */
-  padding: 10px 22px;
-  border-radius: 50px; /* Fully rounded "pill" shape */
-
-  /* Typography */
-  font-size: 15px;
-  font-weight: 700;
-  text-transform: uppercase; /* Makes it feel more commanding */
-  color: white;
-
-  /* Colors */
-  background-color: #222222; /* Nearly black */
-  transition: all 0.3s ease;
-}
-
-.print-btn:hover {
-  background-color: white;
-  color: #222222;
-  border-color: #222222;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
-
-.print-btn:active {
-  transform: scale(0.98); /* Slight shrink effect on click */
-}
-
-
-.thankyou-note{
-  margin-top: 10px;
-  text-align: center;
-}
-
-.table th,
-.table td {
-  padding: 4px 6px !important;  /* reduce vertical height */
-  font-size: 14px;              /* optional: smaller text */
-}
-
-.table tr {
-  line-height: 1 !important;    /* makes rows tighter */
-}
-
-
-
-
 /* ---------------------- packing page ---------------------- */
 
 .packing-container {
@@ -516,4 +419,369 @@
 .packing-table tr:nth-child(even) {
   background-color: #f9f9f9;
 }
+
+
+/* Status dropdown */
+select {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Dropdown hover/focus effect */
+select:hover,
+select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+/* Status update button next to dropdown */
+button {
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+
+
+
+
+
+/* ===================== Order Page Wrapper ===================== */
+.order-page {
+  background: #fff;
+  padding: 20px 25px;
+  border-radius: 8px;
+  /* max-width: 1100px; */
+  margin: 20px auto;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  font-family: Arial, sans-serif;
+}
+
+/* ===================== Titles ===================== */
+.order-page h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.order-page h3 {
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+/* ===================== Buttons ===================== */
+.order-btn {
+  padding: 8px 14px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.order-btn-edit {
+  background-color: #2563eb;
+  color: #fff;
+  margin-bottom: 15px;
+}
+
+.order-btn-edit:hover {
+  background-color: #1e40af;
+}
+
+.order-page button {
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.order-page button:hover {
+  opacity: 0.85;
+}
+
+/* ===================== Customer Info Inputs ===================== */
+.order-page > div > strong {
+  display: inline-block;
+  width: 120px; /* Align labels */
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.order-page > .customer-info > div > input,
+.order-page > .customer-info>  div > select {
+  padding: 6px 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  width: 250px;
+  margin-bottom: 10px;
+  margin-top:2px;
+}
+
+.customer-info{
+line-height: 1.3;
+}
+/* Focus effect */
+.order-page > div > input:focus,
+.order-page > div > select:focus {
+  border-color: #2563eb;
+  outline: none;
+  box-shadow: 0 0 3px #2563eb;
+}
+
+/* ===================== Product Search ===================== */
+.order-page input[placeholder="Search products..."] {
+  width: 100%;
+  max-width: 350px;
+  margin-bottom: 10px;
+  padding: 6px 10px;
+}
+
+/* ===================== Product List ===================== */
+.product-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.product-item button {
+  background-color: #16a34a;
+  color: #fff;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 5px;
+  font-size: 13px;
+}
+
+.product-item button:hover {
+  background-color: #15803d;
+}
+
+/* ===================== Table ===================== */
+.order-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.order-table th,
+.order-table td {
+  padding: 10px 8px;
+  border: 1px solid #eee;
+  text-align: left;
+  font-size: 14px;
+}
+
+.order-table th {
+  background-color: #f9f9f9;
+  font-weight: 600;
+}
+
+/* Inputs inside table */
+.order-table input[type="number"] {
+  width: 60px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+/* Remove item button */
+.order-table button {
+  background-color: #ef4444;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: none;
+}
+
+.order-table button:hover {
+  background-color: #b91c1c;
+}
+
+/* ===================== Order Summary ===================== */
+.order-summary {
+  margin-top: 20px;
+}
+
+.order-summary h3 {
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+
+
+
+/* ---------------------------- Customer Page ---------------------------- */
+.customer-page {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.customer-header {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 28px;
+  color: #333;
+}
+
+/* Back button */
+.back-btn {
+  background-color: #f0f0f0;
+  color: #333;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  font-size: 14px;
+  transition: background 0.3s;
+}
+
+.back-btn:hover {
+  background-color: #e0e0e0;
+}
+
+/* Customer card */
+.customer-card {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Customer fields */
+.customer-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  color: #555;
+  flex-wrap: wrap; /* ensures fields wrap on small screens */
+}
+
+.customer-field strong {
+  width: 100px;
+  min-width: 80px; /* prevent shrinking too much on mobile */
+}
+
+/* Badge for Walk-in / Regular */
+.badge {
+  margin-left: 10px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 12px;
+  color: white;
+}
+
+.badge.walkin {
+  background-color: #f39c12; /* orange */
+}
+
+.badge.regular {
+  background-color: #27ae60; /* green */
+}
+
+/* Icons */
+.icon {
+  font-size: 18px;
+  color: #777;
+}
+
+/* Receipt button */
+.receipt-btn {
+  margin-top: 15px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  background-color: #3498db;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s;
+  align-self: flex-start;
+}
+
+.receipt-btn:hover {
+  background-color: #2980b9;
+}
+
+/* ---------------------------- Responsive Styles ---------------------------- */
+@media (max-width: 768px) {
+  .customer-page {
+    padding: 15px;
+  }
+
+  .customer-header {
+    font-size: 24px;
+  }
+
+  .customer-field {
+    font-size: 14px;
+    gap: 5px;
+  }
+
+  .customer-field strong {
+    width: 80px;
+  }
+
+  .back-btn, .receipt-btn {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .customer-page {
+    margin: 20px auto;
+    padding: 10px;
+  }
+
+  .customer-header {
+    font-size: 20px;
+  }
+
+  .customer-field strong {
+    width: 70px;
+  }
+
+  .badge {
+    font-size: 11px;
+    padding: 2px 6px;
+  }
+
+  .back-btn, .receipt-btn {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+}
+
+
+
 

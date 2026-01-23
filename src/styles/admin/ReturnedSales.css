@@ -1,0 +1,131 @@
+/* Page wrapper */
+.returned-sales-page {
+  padding: 24px;
+  background: #f4f6f8;
+  min-height: 100vh;
+}
+
+/* Title */
+.returned-sales-page h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 14px;
+  color: #111827;
+}
+
+/* Top filter bar */
+.top-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  background: #ffffff;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 14px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.top-bar input,
+.top-bar select {
+  padding: 8px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 14px;
+  min-width: 180px;
+}
+
+.top-bar input:focus,
+.top-bar select:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+/* Summary bar */
+.summary-bar {
+  display: flex;
+  justify-content: space-between;
+  background: #ffffff;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  margin-bottom: 14px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Table wrapper */
+.table-container {
+  background: #ffffff;
+  border-radius: 6px;
+  overflow-x: auto;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Table */
+.table-container table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+/* Header */
+.table-container thead {
+  background: #111827;
+  color: #ffffff;
+}
+
+.table-container th {
+  padding: 10px;
+  text-align: left;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Body */
+.table-container td {
+  padding: 10px;
+  border-bottom: 1px solid #e5e7eb;
+  white-space: nowrap;
+}
+
+.table-container tbody tr:hover {
+  background: #f9fafb;
+}
+
+/* No data / loading */
+.no-data {
+  text-align: center;
+  padding: 20px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* Action button */
+.view-btn {
+  background: #3b82f6;
+  color: #ffffff;
+  padding: 6px 10px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.view-btn:hover {
+  background: #2563eb;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .summary-bar {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .top-bar {
+    flex-direction: column;
+  }
+
+  .top-bar input,
+  .top-bar select {
+    width: 100%;
+  }
+}

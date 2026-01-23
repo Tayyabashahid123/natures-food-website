@@ -1,0 +1,107 @@
+@page {
+  size: A4;
+  margin: 10mm;   /* slightly tighter than 12mm */
+    background: white;
+
+}
+
+  .receipt-container {
+    display: block !important;
+    position: static;              /* 🔑 prevents blank page issues */
+    /* max-width: 720px;              keeps receipt centered */
+    margin: 0 auto;
+    padding: 8px 10px;
+    background: white;
+    font-family: Arial, sans-serif;
+    color: #000;
+    background: white;
+
+  }
+
+   /* Center header text */
+  .company-detail {
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  .company-detail h2 {
+    margin: 4px 0;
+  }
+
+  /* Sale info spacing */
+  .sale-detail {
+    font-size: 13px;
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+
+  /* Table formatting */
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 6px;
+    font-size: 13px;
+  }
+
+  .table th,
+  .table td {
+    padding: 5px 6px;     /* cleaner spacing */
+    line-height: 1.2;
+  }
+
+  /* Column alignment */
+  .table th:nth-child(1),
+  .table td:nth-child(1),
+  .table th:nth-child(4),
+  .table td:nth-child(4) {
+    text-align: center;  /* Sr#, Qty */
+  }
+
+  .table th:nth-child(3),
+  .table td:nth-child(3),
+  .table th:nth-child(5),
+  .table td:nth-child(5),
+  .table th:nth-child(6),
+  .table td:nth-child(6) {
+    text-align: right;   /* Price, Discount, Total */
+  }
+
+  /* Payment section */
+  .payment-detail {
+    margin-top: 8px;
+    font-size: 14px;
+  }
+
+  .payment-detail p {
+    display: flex;
+    justify-content: space-between;
+    margin: 4px 0;
+  }
+
+  /* Footer */
+  .thankyou-note {
+    margin-top: 8px;
+    text-align: center;
+    font-size: 12px;
+  }
+
+@media print {
+
+  body {
+    margin: 0;
+    background: white;
+  }
+
+  /* Print receipt ONLY */
+   .admin-sidebar {
+      display: none !important;
+    }
+
+
+  /* Hide print button */
+  .print-btn {
+    display: none !important;
+  }
+
+ 
+}

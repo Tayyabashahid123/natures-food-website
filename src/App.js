@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Shop from "./pages/Shop";
 import About from "./pages/About";
@@ -17,6 +17,8 @@ import OrderDetails from "./pages/admin/OrderDetails";
 import SalesList from "./pages/admin/SalesList";
 import SaleReceipt from "./pages/admin/SaleReceipt";
 import Packing from "./pages/admin/Packing"
+import CustomerDetail from "./pages/admin/Customer";
+import ReturnedSales from "./pages/admin/ReturnedSales";
 import ScrollToTop from "./components/ScrollToTop";
 import "./App.css";
 
@@ -43,7 +45,9 @@ function App() {
           <Route path="orders/:id" element={<OrderDetails />} /> 
           <Route path="/admin/sales" element={<SalesList />} />
           <Route path="/admin/packing" element={<Packing />} />
-          <Route path="/admin/sales/:id" element={<SaleReceipt />} />
+          <Route path="/admin/sales/:id" element={<SaleReceipt/>} />
+          <Route path="/admin/returned-sales" element={<ReturnedSales />} />
+          <Route path="/admin/customers/:id" element={<CustomerDetail />} />
           <Route path="settings" element={<Settings />} />
         </Route>
       </Routes>
