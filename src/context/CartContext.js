@@ -39,7 +39,6 @@ export function CartProvider({ children }) {
     }
     // already exists → increase by its own quantity
     else if (existingItem && product.quantity) {
-      console.log("existing item hereeee")
       setCart(
         cart.map(item =>
           item.id === product.id

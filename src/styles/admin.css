@@ -291,36 +291,6 @@
   border-color: #4c4cff;
 }
 
-/* ---------------------- Products List ---------------------- */
-.product-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-
-.product-item {
-  background: #f0f0f0;
-  padding: 8px 12px;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.product-item button {
-  background: #4c4cff;
-  color: white;
-  border: none;
-  padding: 4px 8px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.product-item button:hover {
-  background: #3a3ae6;
-}
 
 /* ---------------------- Cart Items ---------------------- */
 .cart-items {
@@ -372,96 +342,6 @@
 
 
 
-/* ---------------------- packing page ---------------------- */
-
-.packing-container {
-  padding: 20px;
-  font-family: Arial, sans-serif;
-}
-
-.heading {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.controls {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-
-.controls input {
-  flex: 1;
-  padding: 8px;
-  font-size: 14px;
-}
-
-.controls select {
-  padding: 8px;
-  font-size: 14px;
-}
-
-.packing-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.packing-table th, .packing-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
-}
-
-.packing-table th {
-  background-color: #f2f2f2;
-}
-
-.packing-table tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-
-/* Status dropdown */
-select {
-  padding: 6px 12px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  background-color: #fff;
-  font-size: 14px;
-  outline: none;
-  transition: all 0.2s ease-in-out;
-}
-
-/* Dropdown hover/focus effect */
-select:hover,
-select:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
-}
-
-/* Status update button next to dropdown */
-button {
-  padding: 6px 14px;
-  border-radius: 6px;
-  border: none;
-  background-color: #007bff;
-  color: white;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
-
-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-
-
 
 
 
@@ -497,6 +377,7 @@ button:disabled {
   cursor: pointer;
   font-weight: 500;
   transition: 0.2s;
+
 }
 
 .order-btn-edit {
@@ -512,6 +393,14 @@ button:disabled {
 .order-page button {
   cursor: pointer;
   transition: 0.2s;
+  
+background: #3b82f6;
+  color: #ffffff;
+  padding: 6px 10px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 13px;
+
 }
 
 .order-page button:hover {

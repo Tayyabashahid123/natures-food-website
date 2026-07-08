@@ -1,217 +1,327 @@
 const Order = require("../models/Order");
 const Product = require("../models/Product");
 
-// -------------------- CREATE ORDER --------------------
-exports.createOrder = async (req, res) => {
-  try {
-    let {
-      customerName = "Walk-in",
-      customerPhone = "",
-      customerAddress = "",
-      items = [],
-      discount = 0, // discount % applied to all items
-      tax = 0,
-      paymentMethod = "cash",
-    } = req.body;
+/* =========================
+   CREATE ORDER
+========================= */
+    exports.createOrder = async (req, res) => {
+      try {
+        const {
+          customerName,
+          customerPhone,
+          customerAddress,
+          items,
+          profit = 0,
+          discount = 0,
+          paymentMethod = "credit"
+        } = req.body;
 
-    discount = Number(discount) || 0;
-    tax = Number(tax) || 0;
+        if (!Array.isArray(items) || items.length === 0) {
+          return res.status(400).json({ message: "Order must have at least one item" });
+        }
 
-    if (!items.length) return res.status(400).json({ message: "Order items required" });
+        let subtotal = 0;
+        let totalProfit = 0;
+        const processedItems = [];
 
-    let subtotal = 0;
-    let totalProfit = 0;
-    let totalDiscount = 0;
-    const formattedItems = [];
+        for (const item of items) {
+          const { productId, slabLabel, quantity } = item;
 
-    for (const item of items) {
-      const quantity = Number(item.quantity);
-      if (quantity <= 0) return res.status(400).json({ message: "Invalid quantity" });
+          if (!productId || !slabLabel || quantity <= 0) {
+            return res.status(400).json({ message: "Invalid order item data" });
+          }
 
-      const product = await Product.findById(item.productId);
-      if (!product) return res.status(404).json({ message: "Product not found" });
-      if (product.stock < quantity) return res.status(400).json({ message: `Not enough stock for ${product.name}` });
+          const product = await Product.findById(productId);
+          if (!product) return res.status(404).json({ message: "Product not found" });
 
-      const salePrice = Number(product.price);
-      const purchasePrice = Number(product.purchasePrice || 0);
+          const slab = product.slabs.find(s => s.label === slabLabel);
+          if (!slab) {
+            return res.status(404).json({ message: `Slab not found: ${slabLabel}` });
+          }
 
-      // Calculate discount and profit per item
-      const itemDiscount = parseFloat(((salePrice * discount) / 100).toFixed(2));
-      const itemProfit = parseFloat((salePrice - purchasePrice - itemDiscount).toFixed(2));
+          const gramsUsed = slab.gramsUsed * quantity;
 
-      subtotal += salePrice * quantity;
-      totalDiscount += itemDiscount * quantity;
-      totalProfit += itemProfit * quantity;
+          // if (product.stockGrams < gramsUsed) {
+          //   return res.status(400).json({
+          //     message: `Not enough stock for ${product.name} (${slab.label})`
+          //   });
+          // }
 
-      formattedItems.push({
-        productId: product._id,
-        name: product.name,
-        quantity,
-        salePrice,
-        purchasePrice,
-        total: salePrice * quantity,
-        discountAmount: itemDiscount * quantity,
-        profitAmount: itemProfit * quantity,
-      });
-    }
+          product.stockGrams -= gramsUsed;
+          await product.save();
 
-    const totalAmount = parseFloat((subtotal - totalDiscount + tax).toFixed(2));
+          const itemSubtotal = slab.salePrice * quantity;
+          const itemProfit = (slab.salePrice - slab.purchaseCost) * quantity;
 
-    const order = new Order({
-      customerName,
-      customerPhone,
-      customerAddress,
-      items: formattedItems,
-      subtotal,
-      discount,
-      discountAmount: totalDiscount,
-      profitAmount: totalProfit,
-      tax,
-      totalAmount,
-      paymentMethod,
-      status: "pending",
-    });
+          subtotal += itemSubtotal;
+          totalProfit += itemProfit;
 
-    await order.save();
+          processedItems.push({
+            productId: product._id,
+            productName: product.name,
+            slabLabel: slab.label,
+            gramsUsed,
+            quantity,
+            salePrice: slab.salePrice,
+            purchaseCost: slab.purchaseCost,
+            profit: itemProfit,
+            finalTotal: subtotal
+          });
+        }
 
-    // Reduce stock
-    for (const item of formattedItems) {
-      await Product.findByIdAndUpdate(item.productId, { $inc: { stock: -item.quantity } });
-    }
+        const discountAmount = (subtotal * discount) / 100;
+        const totalAmount = subtotal - discountAmount;
+        const profitAmount = totalProfit - discountAmount;
 
-    res.status(201).json(order);
-  } catch (err) {
-    console.error("CREATE ORDER ERROR:", err);
-    res.status(500).json({ message: "Server error" });
-  }
-};
+        const profitPercentage =
+          subtotal > 0 ? Number(((profitAmount / subtotal) * 100).toFixed(2)) : 0;
 
-// -------------------- UPDATE ORDER --------------------
-exports.updateOrder = async (req, res) => {
-  try {
-    const { id } = req.params;
-    let { items = [], discount = 0, status } = req.body;
+        const order = await Order.create({
+          customerName,
+          customerPhone,
+          customerAddress,
+          items: processedItems,
+          subtotal,
+          discount,
+          discountAmount,
+          profitAmount,
+          profitPercentage,
+          totalAmount,
+          paymentMethod,
+          status: "pending"
+        });
 
-    discount = Number(discount) || 0;
-    if (!Array.isArray(items)) items = [];
+        res.json(order);
+      } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Server error" });
+      }
+    };
 
-    const order = await Order.findById(id);
-    if (!order) return res.status(404).json({ msg: "Order not found" });
-
-    // Restore previous stock
-    for (const prev of order.items || []) {
-      if (!prev.productId || !prev.quantity) continue;
-      await Product.findByIdAndUpdate(prev.productId, { $inc: { stock: prev.quantity } });
-    }
-
-    let subtotal = 0;
-    let totalProfit = 0;
-    let totalDiscount = 0;
-    const formattedItems = [];
-
-    for (const item of items) {
-      const quantity = Number(item.quantity);
-      if (!item.productId || quantity <= 0) return res.status(400).json({ msg: "Invalid item in order" });
-
-      const product = await Product.findById(item.productId);
-      if (!product) return res.status(404).json({ msg: `Product not found` });
-      if (product.stock < quantity) return res.status(400).json({ msg: `Not enough stock for ${product.name}` });
-
-      const salePrice = Number(product.price);
-      const purchasePrice = Number(product.purchasePrice || 0);
-
-      const itemDiscount = parseFloat(((salePrice * discount) / 100).toFixed(2));
-      const itemProfit = parseFloat((salePrice - purchasePrice - itemDiscount).toFixed(2));
-
-      subtotal += salePrice * quantity;
-      totalDiscount += itemDiscount * quantity;
-      totalProfit += itemProfit * quantity;
-
-      formattedItems.push({
-        productId: product._id,
-        name: product.name,
-        quantity,
-        salePrice,
-        purchasePrice,
-        total: salePrice * quantity,
-        discountAmount: itemDiscount * quantity,
-        profitAmount: itemProfit * quantity,
-      });
-    }
-
-    const totalAmount = parseFloat((subtotal - totalDiscount).toFixed(2));
-
-    order.items = formattedItems;
-    order.subtotal = subtotal;
-    order.discount = discount;
-    order.discountAmount = totalDiscount;
-    order.profitAmount = totalProfit;
-    order.totalAmount = totalAmount;
-    if (status) order.status = status;
-
-    await order.save();
-
-    // Reduce stock again
-    for (const item of formattedItems) {
-      await Product.findByIdAndUpdate(item.productId, { $inc: { stock: -item.quantity } });
-    }
-
-    res.json({ msg: "Order updated", order });
-  } catch (err) {
-    console.error("UPDATE ORDER ERROR:", err);
-    res.status(500).json({ msg: "Server error" });
-  }
-};
-
-
-// -------------------- GET ALL ORDERS --------------------
-exports.getAllOrders = async (req, res) => {
+/* =========================
+   GET ALL ORDERS
+========================= */
+exports.getOrders = async (req, res) => {
   try {
     const orders = await Order.find().sort({ createdAt: -1 });
     res.json(orders);
   } catch (err) {
-    console.error("GET ALL ORDERS ERROR:", err);
-    res.status(500).json({ msg: "Server error" });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
-// -------------------- GET ORDER BY ID --------------------
+/* =========================
+   GET SINGLE ORDER
+========================= */
 exports.getOrderById = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
-    if (!order) return res.status(404).json({ msg: "Order not found" });
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
     res.json(order);
   } catch (err) {
-    console.error("GET ORDER ERROR:", err);
-    res.status(500).json({ msg: "Server error" });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
-// -------------------- UPDATE ORDER STATUS --------------------
-exports.updateOrderStatus = async (req, res) => {
-  const { status } = req.body;
-  if (!["pending", "completed", "returned"].includes(status)) {
-    return res.status(400).json({ msg: "Invalid status" });
-  }
-
+/* =========================
+   UPDATE ORDER STATUS ONLY
+   (PUT /orders/:id)
+========================= */
+exports.updateOrder = async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id);
-    if (!order) return res.status(404).json({ msg: "Order not found" });
+    const { items, discount = 0, status, paymentMethod } = req.body;
 
-    // If returned, restore stock and set returnedAt
-    if (status === "returned" && order.status !== "returned") {
-      for (const item of order.items) {
-        await Product.findByIdAndUpdate(item.productId, { $inc: { stock: item.quantity } });
-      }
-      order.returnedAt = new Date();
+    const order = await Order.findById(req.params.id);
+    if (!order) return res.status(404).json({ message: "Order not found" });
+
+    /* 🔁 RESTOCK OLD ITEMS */
+    for (const item of order.items) {
+      await Product.findByIdAndUpdate(item.productId, {
+        $inc: { stockGrams: item.gramsUsed }
+      });
     }
 
-    order.status = status;
+    let subtotal = 0;
+    let totalProfit = 0;
+    const processedItems = [];
+
+    for (const item of items) {
+      const product = await Product.findById(item.productId);
+      if (!product) return res.status(404).json({ message: "Product not found" });
+
+      const slab = product.slabs.find(s => s.label === item.slabLabel);
+      if (!slab) {
+        return res.status(404).json({ message: `Slab not found: ${item.slabLabel}` });
+      }
+
+      const gramsUsed = slab.gramsUsed * item.quantity;
+
+      // if (product.stockGrams < gramsUsed) {
+      //   return res.status(400).json({
+      //     message: `Not enough stock for ${product.name} (${slab.label})`
+      //   });
+      // }
+
+      product.stockGrams -= gramsUsed;
+      await product.save();
+
+      const itemSubtotal = slab.salePrice * item.quantity;
+      const itemProfit = (slab.salePrice - slab.purchaseCost) * item.quantity;
+
+      subtotal += itemSubtotal;
+      totalProfit += itemProfit;
+
+      processedItems.push({
+        productId: product._id,
+        productName: product.name,
+        slabLabel: slab.label,
+        gramsUsed,
+        quantity: item.quantity,
+        salePrice: slab.salePrice,
+        purchaseCost: slab.purchaseCost,
+        profit: itemProfit,
+        finalTotal: subtotal
+
+      });
+    }
+
+    const discountAmount = (subtotal * discount) / 100;
+    const totalAmount = subtotal - discountAmount;
+    const profitAmount = totalProfit - discountAmount;
+
+    const profitPercentage =
+      subtotal > 0 ? Number(((profitAmount / subtotal) * 100).toFixed(2)) : 0;
+
+    order.items = processedItems;
+    order.subtotal = subtotal;
+    order.discount = discount;
+    order.discountAmount = discountAmount;
+    order.profitAmount = profitAmount;
+    order.profitPercentage = profitPercentage;
+    order.totalAmount = totalAmount;
+    // Set sale date only when moving to completed for the first time
+    if (status === "completed" && order.status !== "completed") {
+      order.status = "completed";
+      order.saledAt = new Date();
+    } else if (status) {
+      order.status = status;
+    }
+    order.paymentMethod = paymentMethod || order.paymentMethod;
+
+    await order.save();
+    res.json(order);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+/* =========================
+   RETURN ORDER
+   (PATCH /orders/:id/return)
+========================= */
+exports.returnOrder = async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    if (order.status === "returned") {
+      return res.status(400).json({ message: "Order already returned" });
+    }
+
+    for (const item of order.items) {
+      await Product.findByIdAndUpdate(item.productId, {
+        $inc: { stockGrams: item.gramsUsed }
+      });
+    }
+
+    order.status = "returned";
+    order.returnedAt = new Date();
     await order.save();
 
-    res.json({ msg: "Order status updated", order });
+    res.json(order);
   } catch (err) {
-    console.error("UPDATE ORDER STATUS ERROR:", err);
-    res.status(500).json({ msg: "Failed to update order status" });
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+
+
+
+/* =========================
+   DELETE ORDER
+========================= */
+exports.deleteOrder = async (req, res) => {
+  try {
+    const order = await Order.findByIdAndDelete(req.params.id);
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+    res.json({ message: "Order deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+
+exports.getDailyProfitReport = async (req, res) => {
+  try {
+    const report = await Order.aggregate([
+      {
+        $match: { status: "completed" }
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: "%Y-%m-%d", date: "$createdAt" }
+          },
+          totalSales: { $sum: "$totalAmount" },
+          totalProfit: { $sum: "$profit" },
+          totalDiscount: { $sum: "$discountAmount" },
+          ordersCount: { $sum: 1 }
+        }
+      },
+      { $sort: { _id: -1 } }
+    ]);
+
+    res.json(report);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+/* Payment status is changed from credit to paid */
+
+exports.markOrderPaid  = async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    if (order.paymentMethod === "paid") {
+      return res.status(400).json({ message: "Order already paid" });
+    }
+
+    order.paymentMethod = "paid";
+    order.paidAt = new Date();
+    await order.save();
+
+    res.json(order);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
   }
 };

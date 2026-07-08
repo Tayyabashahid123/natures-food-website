@@ -1,7 +1,15 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from "recharts";
-import "../../styles/admin.css";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  ResponsiveContainer,
+} from "recharts";
+import "../../styles/admin/Dashboard.css";
 
 export default function Dashboard() {
   const [orders, setOrders] = useState([]);
@@ -9,148 +17,210 @@ export default function Dashboard() {
   const [adminEmail, setAdminEmail] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
   const token = localStorage.getItem("token");
 
+  // ---------------- FETCH DATA ----------------
   useEffect(() => {
-    if (!token) return setError("Not authorized");
+    if (!token) {
+      setError("Not authorized");
+      setLoading(false);
+      return;
+    }
 
-    // Fetch orders
-    const fetchOrders = fetch("http://localhost:5000/api/orders", { headers: { "x-auth-token": token } })
-      .then(async (res) => {
-        if (!res.ok) throw new Error(await res.text());
-        return res.json();
-      });
+    const fetchOrders = fetch("http://localhost:5000/api/orders", {
+      headers: { "x-auth-token": token },
+    }).then((res) => res.json());
 
-    // Fetch products
-    const fetchProducts = fetch("http://localhost:5000/api/products", { headers: { "x-auth-token": token } })
-      .then(async (res) => {
-        if (!res.ok) throw new Error(await res.text());
-        return res.json();
-      });
+    const fetchProducts = fetch("http://localhost:5000/api/products", {
+      headers: { "x-auth-token": token },
+    }).then((res) => res.json());
 
-    // Fetch admin info
-    const fetchAdmin = fetch("http://localhost:5000/api/admin/me", { headers: { "x-auth-token": token } })
-      .then(async res => {
-        if (!res.ok) throw new Error(await res.text());
-        return res.json();
-      });
+    const fetchAdmin = fetch("http://localhost:5000/api/admin/me", {
+      headers: { "x-auth-token": token },
+    }).then((res) => res.json());
 
     Promise.all([fetchOrders, fetchProducts, fetchAdmin])
       .then(([ordersData, productsData, adminData]) => {
-        setOrders(ordersData);
-        setProducts(productsData);
-        setAdminEmail(adminData.email);
-        setLoading(false);
+        setOrders(ordersData || []);
+        setProducts(productsData || []);
+        setAdminEmail(adminData?.email || "");
       })
-      .catch((err) => {
-        console.error(err);
-        setError(err.message || "Failed to fetch data");
-        setLoading(false);
-      });
+      .catch(() => setError("Failed to load dashboard data"))
+      .finally(() => setLoading(false));
   }, [token]);
 
-  if (loading) return <p>Loading dashboard...</p>;
-  if (error) return <p style={{ color: "red" }}>{error}</p>;
+  // ---------------- LOADING / ERROR ----------------
+  if (loading) {
+    return <div className="dashboard-state">Loading dashboard...</div>;
+  }
 
-  // Metrics
-  const totalSales = orders.reduce((sum, o) => sum + o.totalAmount, 0).toFixed(2);
+  if (error) {
+    return <div className="dashboard-state error">{error}</div>;
+  }
+
+  // ---------------- SAFE CALCULATIONS ----------------
+  const totalSales = orders.reduce(
+    (sum, o) => sum + (o.totalAmount || 0),
+    0
+  );
+
   const totalOrders = orders.length;
-  const pendingOrders = orders.filter(o => o.status === "pending").length;
-  const avgOrderValue = pendingOrders ? (totalSales / pendingOrders).toFixed(2) : 0;
-  const totalProductsSold = orders.filter(o => o.status === "completed").reduce((sum, o) => sum + o.items.reduce((s, i) => s + i.quantity, 0), 0);
-  
-  // Recent orders (latest 5)
+
+  const pendingOrders = orders.filter((o) => o.status === "pending").length;
+
+  const avgOrderValue =
+    totalOrders > 0 ? (totalSales / totalOrders).toFixed(2) : 0;
+
+  const totalProductsSold = orders
+    .filter((o) => o.status === "completed")
+    .reduce(
+      (sum, o) =>
+        sum +
+        (o.items?.reduce((s, i) => s + (i.quantity || 0), 0) || 0),
+      0
+    );
+
   const recentOrders = orders.slice(0, 5);
 
-  // Sales trend for last 7 days
+  // ---------------- SALES CHART ----------------
   const today = new Date();
+
   const last7Days = Array.from({ length: 7 }, (_, i) => {
     const d = new Date(today);
     d.setDate(d.getDate() - i);
-    return d.toLocaleDateString();
+    return d.toDateString();
   }).reverse();
 
-  const salesTrend = last7Days.map(date => {
+  const salesTrend = last7Days.map((date) => {
     const dailyTotal = orders
-      .filter(o => new Date(o.createdAt).toLocaleDateString() === date)
-      .reduce((sum, o) => sum + o.totalAmount, 0);
-    return { date, total: dailyTotal };
+      .filter(
+        (o) => new Date(o.createdAt).toDateString() === date
+      )
+      .reduce((sum, o) => sum + (o.totalAmount || 0), 0);
+
+    return {
+      date: new Date(date).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+      }),
+      total: dailyTotal,
+    };
   });
 
-  // Low stock products
-  const lowStockProducts = products.filter(p => p.stock <= 5);
+  // ---------------- LOW STOCK ----------------
+  const lowStockProducts = products.filter((p) => (p.stockGrams || 0) <= 5);
 
   return (
-    <div className="page dashboard">
-      {/* Admin Info */}
-      <div style={{ marginBottom: "20px" }}>
-        <h2>Sales Dashboard</h2>
-        <p>Welcome back, <strong>Ahmad</strong></p>
+    <div className="dashboard-container">
+      {/* HEADER */}
+      <div className="dashboard-header">
+        <div>
+          <h2>Sales Dashboard</h2>
+          <p>
+            Welcome back, <strong>{adminEmail || "Admin"}</strong>
+          </p>
+        </div>
       </div>
 
-      {/* Metrics Cards */}
-      <div className="metrics-cards" style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
-        <div className="card">Total Sales: Rs {totalSales}</div>
-        {/* <div className="card">Total Orders: {totalOrders}</div> */}
-        <div className="card">Pending Orders: {pendingOrders}</div>
-        <div className="card">Average Order Value: Rs {avgOrderValue}</div>
-        <div className="card">Products Sold: {totalProductsSold}</div>
+      {/* METRICS */}
+      <div className="metrics-grid">
+        <div className="metric-card">
+          <h4>Total Sales</h4>
+          <p>Rs {totalSales.toFixed(2)}</p>
+        </div>
+
+        <div className="metric-card">
+          <h4>Total Orders</h4>
+          <p>{totalOrders}</p>
+        </div>
+
+        <div className="metric-card">
+          <h4>Pending Orders</h4>
+          <p>{pendingOrders}</p>
+        </div>
+
+        <div className="metric-card">
+          <h4>Avg Order Value</h4>
+          <p>Rs {avgOrderValue}</p>
+        </div>
+
+        <div className="metric-card highlight">
+          <h4>Products Sold</h4>
+          <p>{totalProductsSold}</p>
+        </div>
       </div>
 
-      {/* Sales Trend Chart */}
-      <div style={{ marginTop: "30px" }}>
+      {/* CHART */}
+      <div className="chart-box">
         <h3>Sales Trend (Last 7 Days)</h3>
+
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={salesTrend}>
-            <CartesianGrid stroke="#ccc" />
+            <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="date" />
             <YAxis />
             <Tooltip />
-            <Line type="monotone" dataKey="total" stroke="#8884d8" />
+            <Line
+              type="monotone"
+              dataKey="total"
+              stroke="#4c4cff"
+              strokeWidth={3}
+            />
           </LineChart>
         </ResponsiveContainer>
       </div>
 
-      {/* Recent Orders */}
-      <div style={{ marginTop: "30px" }}>
+      {/* RECENT ORDERS */}
+      <div className="section">
         <h3>Recent Orders</h3>
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Customer</th>
-              <th>Total</th>
-              <th>Payment</th>
-              <th>Status</th>
-              <th>Date</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {recentOrders.map(o => (
-              <tr key={o._id}>
-                <td>{o.customerName || "Walk-in"}</td>
-                <td>Rs {o.totalAmount}</td>
-                <td>{o.paymentMethod}</td>
-                <td>{o.status}</td>
-                <td>{new Date(o.createdAt).toLocaleString()}</td>
-                <td>
-                  <Link to={`/admin/orders/${o._id}`}>
-                    <button className="view-btn">View</button>
-                  </Link>
-                </td>
+
+        {recentOrders.length === 0 ? (
+          <p>No orders found</p>
+        ) : (
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Total</th>
+                <th>Payment</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+
+            <tbody>
+              {recentOrders.map((o) => (
+                <tr key={o._id}>
+                  <td>{o.customerName || "Walk-in"}</td>
+                  <td>Rs {o.totalAmount}</td>
+                  <td>{o.paymentMethod}</td>
+                  <td>{o.status}</td>
+                  <td>
+                    {new Date(o.createdAt).toLocaleString()}
+                  </td>
+                  <td>
+                    <Link to={`/admin/orders/${o._id}`}>
+                      <button className="view-btn">View</button>
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
 
-      {/* Low Stock Alerts */}
+      {/* LOW STOCK */}
       {lowStockProducts.length > 0 && (
-        <div style={{ marginTop: "30px" }}>
-          <h3>Low Stock Products (≤5)</h3>
+        <div className="section warning-box">
+          <h3>⚠ Low Stock Products</h3>
           <ul>
-            {lowStockProducts.map(p => (
-              <li key={p._id}>{p.name} - Stock: {p.stock}</li>
+            {lowStockProducts.map((p) => (
+              <li key={p._id}>
+                {p.name} — Stock: {p.stockGrams}
+              </li>
             ))}
           </ul>
         </div>

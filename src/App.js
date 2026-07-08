@@ -13,12 +13,15 @@ import Settings from "./pages/admin/Settings";
 import AdminLogin from "./pages/admin/adminLogin";
 import Inventory from "./pages/admin/Inventory";
 import OrdersList from "./pages/admin/OrdersList";
-import OrderDetails from "./pages/admin/OrderDetails";
+import OrderForm from "./pages/admin/OrderForm";
+import OrderDetail from "./pages/admin/OrderDetails"
 import SalesList from "./pages/admin/SalesList";
 import SaleReceipt from "./pages/admin/SaleReceipt";
 import Packing from "./pages/admin/Packing"
 import CustomerDetail from "./pages/admin/Customer";
 import ReturnedSales from "./pages/admin/ReturnedSales";
+import StockIn from "./pages/admin/StockIn";
+import InventoryHistory from "./pages/admin/InventoryHistory";
 import ScrollToTop from "./components/ScrollToTop";
 import "./App.css";
 
@@ -41,12 +44,16 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path="products" element={<Products />} />
           <Route path="inventory" element={<Inventory />} />
-          <Route path="orders" element={<OrdersList />} /> 
-          <Route path="orders/:id" element={<OrderDetails />} /> 
+          <Route path="/admin/stock-in" element={<StockIn />} />
+          <Route path="/admin/inventory-history" element={<InventoryHistory />} />
+          <Route path="/admin/orders" element={<OrdersList />} />
+          <Route path="/admin/orders/new" element={<OrderForm />} />
+          <Route path="/admin/orders/:id" element={<OrderDetail />} />
+          <Route path="/admin/orders/edit/:id" element={<OrderForm />} />
           <Route path="/admin/sales" element={<SalesList />} />
           <Route path="/admin/packing" element={<Packing />} />
           <Route path="/admin/sales/:id" element={<SaleReceipt/>} />
-          <Route path="/admin/returned-sales" element={<ReturnedSales />} />
+          <Route path="/admin/return" element={<ReturnedSales />} />
           <Route path="/admin/customers/:id" element={<CustomerDetail />} />
           <Route path="settings" element={<Settings />} />
         </Route>

@@ -18,7 +18,7 @@ export default function ReturnedSales() {
   useEffect(() => {
     const fetchReturned = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/orders/returned", {
+        const res = await fetch("http://localhost:5000/api/orders", {
           headers: { "x-auth-token": token },
         });
 
@@ -31,7 +31,9 @@ export default function ReturnedSales() {
         }
 
         const data = await res.json();
-        setSales(data);
+        const returned = data.filter(order => order.status === "returned");
+
+        setSales(returned);
       } catch (err) {
         console.error(err);
       } finally {
@@ -89,8 +91,8 @@ export default function ReturnedSales() {
 
     // Sorting
     result.sort((a, b) => {
-      const totalA = a.items.reduce((s, i) => s + i.price * i.quantity, 0);
-      const totalB = b.items.reduce((s, i) => s + i.price * i.quantity, 0);
+      const totalA = a.items.reduce((s, i) => s + i.salePrice * i.quantity, 0);
+      const totalB = b.items.reduce((s, i) => s + i.salePrice * i.quantity, 0);
 
       if (sortBy === "latest") return new Date(b.returnedAt) - new Date(a.returnedAt);
       if (sortBy === "oldest") return new Date(a.returnedAt) - new Date(b.returnedAt);
@@ -107,9 +109,10 @@ export default function ReturnedSales() {
   const totalAmount = filteredSales.reduce(
     (sum, sale) =>
       sum +
-      sale.items.reduce((s, i) => s + i.price * i.quantity, 0),
+      sale.items.reduce((s, i) => s + i.salePrice * i.quantity, 0),
     0
   );
+
 
   return (
     <div className="returned-sales-page">
@@ -162,7 +165,7 @@ export default function ReturnedSales() {
       {/* Summary */}
       <div className="summary-bar">
         <span>Total Returned Sales: {filteredSales.length}</span>
-        <span>Total Refund: Rs {totalAmount.toFixed(2)}</span>
+        {/* <span>Total Refund: Rs {totalAmount.toFixed(2)}</span> */}
       </div>
 
       {/* Table */}
@@ -191,7 +194,7 @@ export default function ReturnedSales() {
             ) : (
               filteredSales.map((sale, index) => {
                 const total = sale.items.reduce(
-                  (s, i) => s + i.price * i.quantity,
+                  (s, i) => s + i.salePrice * i.quantity,
                   0
                 );
 
@@ -200,7 +203,7 @@ export default function ReturnedSales() {
                     <td>{index + 1}</td>
                     <td>{sale.customerName || "Walk-in"}</td>
                     <td>{sale.items.length}</td>
-                    <td>Rs {total.toFixed(2)}</td>
+                    <td>Rs {sale.totalAmount.toFixed(2)}</td>
                     <td>{new Date(sale.returnedAt).toLocaleString()}</td>
                     <td>
                       <Link to={`/admin/sales/${sale._id}`} className="view-btn">

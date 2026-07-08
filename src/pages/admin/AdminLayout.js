@@ -25,10 +25,11 @@ export default function AdminLayout() {
           <Link to="/admin" className={isActive("/admin")}>Dashboard</Link>
           <Link to="/admin/products" className={isActive("/admin/products")}>Products</Link>
           <Link to="/admin/inventory" className={isActive("/admin/inventory")}>Inventory</Link>
+          <Link to="/admin/inventory-history" className={isActive("/admin/inventory-history")}>Inventory History</Link>
           <Link to="/admin/orders" className={isActive("/admin/orders")}>Orders</Link>
           <Link to="/admin/packing" className={isActive("/admin/packing")}>Packing</Link>
           <Link to="/admin/sales" className={isActive("/admin/sales")}>Sales</Link>
-          <Link to="/admin/returned-sales" className={isActive("/admin/returned-sales")}>Returned Sales</Link>
+          <Link to="/admin/return" className={isActive("/admin/return")}>Returned Sales</Link>
           <Link to="/admin/settings" className={isActive("/admin/settings")}>Settings</Link>
 
           <button className="logout-button" onClick={handleLogout}>

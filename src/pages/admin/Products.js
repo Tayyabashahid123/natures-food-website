@@ -1,53 +1,94 @@
 import { useState, useEffect } from "react";
+import "../../styles/admin/Products.css";
 
 export default function Products() {
   const [products, setProducts] = useState([]);
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");             // Sale Price
-  const [purchasePrice, setPurchasePrice] = useState(""); // Purchase Price
-  const [stock, setStock] = useState("");
+  const [stockGrams, setStockGrams] = useState("");
   const [category, setCategory] = useState("");
   const [image, setImage] = useState(null);
   const [editingId, setEditingId] = useState(null);
+
+  // Slab inputs
+  const [slabs, setSlabs] = useState([]);
+  const [slabLabel, setSlabLabel] = useState("");
+  const [slabType, setSlabType] = useState("GRAM");
+  const [slabGramsUsed, setSlabGramsUsed] = useState("");
+  const [slabSalePrice, setSlabSalePrice] = useState("");
+  const [slabPurchaseCost, setSlabPurchaseCost] = useState("");
 
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("nameAsc");
 
   const token = localStorage.getItem("token");
 
-  // ---------------- Fetch Products ----------------
-  const fetchProducts = async () => {
-    try {
-      const res = await fetch("http://localhost:5000/api/products", {
-        headers: { "x-auth-token": token },
-      });
-      const data = await res.json();
-      setProducts(data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
+  // ------------------ Fetch Products ------------------
   useEffect(() => {
+    async function fetchProducts() {
+      try {
+        const res = await fetch("http://localhost:5000/api/products", {
+          headers: { "x-auth-token": token },
+        });
+        const data = await res.json();
+        setProducts(data);
+      } catch (err) {
+        console.error(err);
+      }
+    }
     fetchProducts();
   }, [token]);
 
-  // ---------------- Add / Update Product ----------------
+  // ------------------ Add / Update Slab ------------------
+  const handleAddSlab = () => {
+    // validation
+    if (
+      slabLabel.trim() === "" ||
+      slabGramsUsed === "" ||
+      isNaN(slabGramsUsed) ||
+      slabSalePrice === "" ||
+      isNaN(slabSalePrice) ||
+      slabPurchaseCost === "" ||
+      isNaN(slabPurchaseCost)
+    ) {
+      return alert("Fill all slab fields (0 is allowed)");
+    }
+
+    const slabObj = {
+      label: slabLabel,
+      type: slabType,
+      gramsUsed: parseFloat(slabGramsUsed),
+      salePrice: parseFloat(slabSalePrice),
+      purchaseCost: parseFloat(slabPurchaseCost),
+    };
+
+    setSlabs([...slabs, slabObj]);
+
+    // reset slab inputs
+    setSlabLabel("");
+    setSlabType("GRAM");
+    setSlabGramsUsed("");
+    setSlabSalePrice("");
+    setSlabPurchaseCost("");
+  };
+
+  const handleDeleteSlab = (index) => {
+    setSlabs(slabs.filter((_, i) => i !== index));
+  };
+
+  // ------------------ Add / Update Product ------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!name || !price || !purchasePrice || !stock) {
-      return alert("Please fill all required fields");
+    if (name.trim() === "" || stockGrams === "" || isNaN(stockGrams)) {
+      return alert("Product name and stock are required");
     }
+    if (slabs.length === 0) return alert("Add at least one slab");
 
     const formData = new FormData();
     formData.append("name", name);
-    formData.append("price", price);
-    formData.append("purchasePrice", purchasePrice);
-    formData.append("stock", stock);
-    formData.append("description", description);
+    formData.append("stockGrams", stockGrams);
     formData.append("category", category);
+    formData.append("slabs", JSON.stringify(slabs));
     if (image) formData.append("image", image);
 
     let url = "http://localhost:5000/api/products";
@@ -61,22 +102,25 @@ export default function Products() {
       const res = await fetch(url, {
         method,
         headers: { "x-auth-token": token },
-        body: formData, // Do NOT set content-type manually for FormData
+        body: formData,
       });
 
       const data = await res.json();
-
       if (res.ok) {
-        fetchProducts();
-        // Reset form
+        // Reset
         setName("");
-        setDescription("");
-        setPrice("");
-        setPurchasePrice("");
-        setStock("");
+        setStockGrams("");
         setCategory("");
+        setSlabs([]);
         setImage(null);
         setEditingId(null);
+
+        // Refresh list
+        const res2 = await fetch("http://localhost:5000/api/products", {
+          headers: { "x-auth-token": token },
+        });
+        const data2 = await res2.json();
+        setProducts(data2);
       } else {
         alert(data.message || "Error adding/updating product");
       }
@@ -86,147 +130,168 @@ export default function Products() {
     }
   };
 
-  // ---------------- Edit Product ----------------
-  const handleEdit = (p) => {
+  // ------------------ Edit Product ------------------
+  const handleEditProduct = (p) => {
     setName(p.name);
-    setDescription(p.description || "");
-    setPrice(p.price);
-    setPurchasePrice(p.purchasePrice || "");
-    setStock(p.stock);
+    setStockGrams(p.stockGrams);
     setCategory(p.category || "");
+    setSlabs(p.slabs || []);
     setImage(null);
     setEditingId(p._id);
   };
 
-  // ---------------- Delete Product ----------------
-  const handleDelete = async (id) => {
+  // ------------------ Delete Product ------------------
+  const handleDeleteProduct = async (id) => {
     if (!window.confirm("Are you sure?")) return;
     try {
       const res = await fetch(`http://localhost:5000/api/products/${id}`, {
         method: "DELETE",
         headers: { "x-auth-token": token },
       });
-      if (res.ok) fetchProducts();
-      else alert("Delete failed");
+      if (res.ok) setProducts(products.filter((p) => p._id !== id));
     } catch (err) {
       console.error(err);
       alert("Delete failed");
     }
   };
 
-  // ---------------- Filter & Sort ----------------
+  // ------------------ Filter & Sort ------------------
   let filteredProducts = products.filter((p) =>
     p.name.toLowerCase().includes(search.toLowerCase())
   );
 
-  if (sortBy === "nameAsc") filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
-  else if (sortBy === "nameDesc") filteredProducts.sort((a, b) => b.name.localeCompare(a.name));
-  else if (sortBy === "stockAsc") filteredProducts.sort((a, b) => a.stock - b.stock);
-  else if (sortBy === "stockDesc") filteredProducts.sort((a, b) => b.stock - a.stock);
-  else if (sortBy === "priceAsc") filteredProducts.sort((a, b) => a.price - b.price);
-  else if (sortBy === "priceDesc") filteredProducts.sort((a, b) => b.price - a.price);
+  if (sortBy === "nameAsc")
+    filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
+  else if (sortBy === "nameDesc")
+    filteredProducts.sort((a, b) => b.name.localeCompare(a.name));
+  else if (sortBy === "stockAsc") filteredProducts.sort((a, b) => a.stockGrams - b.stockGrams);
+  else if (sortBy === "stockDesc") filteredProducts.sort((a, b) => b.stockGrams - a.stockGrams);
 
-  return (
-    <div>
-      <h2>Products</h2>
+return (
+  <div className="products-page">
+    <div className="products-container">
 
-      {/* Add / Edit Form */}
+      <div className="page-header">
+        <h2>Products</h2>
+        <p>Manage inventory, pricing slabs & stock levels</p>
+      </div>
+
+      {/* Product Form */}
       <form className="admin-form" onSubmit={handleSubmit}>
         <h3>{editingId ? "Edit Product" : "Add Product"}</h3>
 
-        <div className="form-group">
-          <label>Name *</label>
-          <input value={name} onChange={(e) => setName(e.target.value)} required />
+        <div className="form-row">
+          <div className="form-group">
+            <label>Name *</label>
+            <input value={name} onChange={(e) => setName(e.target.value)} />
+          </div>
+
+          <div className="form-group">
+            <label>Stock (grams) *</label>
+            <input type="number" value={stockGrams} onChange={(e) => setStockGrams(e.target.value)} />
+          </div>
+
+          <div className="form-group">
+            <label>Category</label>
+            <input value={category} onChange={(e) => setCategory(e.target.value)} />
+          </div>
+
+          <div className="form-group">
+            <label>Image</label>
+            <input type="file" accept="image/*" onChange={(e) => setImage(e.target.files[0])} />
+          </div>
         </div>
 
-        <div className="form-group">
-          <label>Description</label>
-          <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
+        <h4>Slabs</h4>
+        <div className="slab-inputs">
+          <input placeholder="Label (e.g., 20g)" value={slabLabel} onChange={(e) => setSlabLabel(e.target.value)} />
+          <select value={slabType} onChange={(e) => setSlabType(e.target.value)}>
+            <option value="GRAM">GRAM</option>
+            <option value="AMOUNT">AMOUNT</option>
+          </select>
+          <input type="number" placeholder="Grams used" value={slabGramsUsed} onChange={(e) => setSlabGramsUsed(e.target.value)} />
+          <input type="number" placeholder="Purchase Cost" value={slabPurchaseCost} onChange={(e) => setSlabPurchaseCost(e.target.value)} />
+          <input type="number" placeholder="Sale Price" value={slabSalePrice} onChange={(e) => setSlabSalePrice(e.target.value)} />
+          <button type="button" onClick={handleAddSlab}>Add Slab</button>
         </div>
 
-        <div className="form-group">
-          <label>Sale Price *</label>
-          <input type="number" value={price} onChange={(e) => setPrice(e.target.value)} required />
-        </div>
-
-        <div className="form-group">
-          <label>Purchase Price *</label>
-          <input type="number" value={purchasePrice} onChange={(e) => setPurchasePrice(e.target.value)} required />
-        </div>
-
-        <div className="form-group">
-          <label>Stock *</label>
-          <input type="number" value={stock} onChange={(e) => setStock(e.target.value)} required />
-        </div>
-
-        <div className="form-group">
-          <label>Category</label>
-          <input value={category} onChange={(e) => setCategory(e.target.value)} />
-        </div>
-
-        <div className="form-group">
-          <label>Image</label>
-          <input type="file" accept="image/*" onChange={(e) => setImage(e.target.files[0])} />
-        </div>
+        {slabs.length > 0 && (
+          <ul className="slab-list">
+            {slabs.map((s, i) => (
+              <li key={i}>
+                {s.label} · {s.gramsUsed}g · Sale Rs {s.salePrice} · Cost Rs {s.purchaseCost}
+                <button type="button" onClick={() => handleDeleteSlab(i)}>✕</button>
+              </li>
+            ))}
+          </ul>
+        )}
 
         <button type="submit">{editingId ? "Update Product" : "Add Product"}</button>
       </form>
 
-      <br />
+      {/* Table */}
+      <div className="table-card">
 
-      {/* Search & Sort */}
-      <input
-        type="text"
-        placeholder="Search products..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        style={{ padding: "8px", width: "100%", marginBottom: "10px" }}
-      />
-      <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-        <option value="nameAsc">Name: A → Z</option>
-        <option value="nameDesc">Name: Z → A</option>
-        <option value="stockAsc">Stock: Low → High</option>
-        <option value="stockDesc">Stock: High → Low</option>
-        <option value="priceAsc">Price: Low → High</option>
-        <option value="priceDesc">Price: High → Low</option>
-      </select>
+        <div className="table-toolbar">
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Search products..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+            <option value="nameAsc">Name A→Z</option>
+            <option value="nameDesc">Name Z→A</option>
+            <option value="stockAsc">Stock Low→High</option>
+            <option value="stockDesc">Stock High→Low</option>
+          </select>
+        </div>
 
-      {/* Products Table */}
-      <table className="admin-table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Sale Price</th>
-            <th>Purchase Price</th>
-            <th>Stock</th>
-            <th>Category</th>
-            <th>Image</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredProducts.length > 0 ? filteredProducts.map((p) => (
-            <tr key={p._id}>
-              <td>{p.name}</td>
-              <td>{p.description}</td>
-              <td>Rs {p.price}</td>
-              <td>Rs {p.purchasePrice}</td>
-              <td>{p.stock}</td>
-              <td>{p.category}</td>
-              <td>{p.image ? <img src={`http://localhost:5000/${p.image}`} alt={p.name} width="50" /> : "-"}</td>
-              <td>
-                <button onClick={() => handleEdit(p)}>Edit</button>{" "}
-                <button onClick={() => handleDelete(p._id)}>Delete</button>
-              </td>
-            </tr>
-          )) : (
+        <table className="admin-table">
+          <thead>
             <tr>
-              <td colSpan="8" style={{ textAlign: "center", color: "#888" }}>No products found</td>
+              <th>Name</th>
+              <th>Stock</th>
+              <th>Category</th>
+              <th>Image</th>
+              <th>Slabs</th>
+              <th>Actions</th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {filteredProducts.length > 0 ? (
+              filteredProducts.map((p) => (
+                <tr key={p._id}>
+                  <td data-label="Name">{p.name}</td>
+                  <td data-label="Stock">{p.stockGrams} g</td>
+                  <td data-label="Category">{p.category || "-"}</td>
+                  <td data-label="Image">
+                    {p.image ? (
+                      <img src={`http://localhost:5000/${p.image}`} alt={p.name} />
+                    ) : "-"}
+                  </td>
+                  <td data-label="Slabs">
+                    {p.slabs?.map((s, i) => (
+                      <div key={i}>{s.label} — Rs {s.salePrice}</div>
+                    ))}
+                  </td>
+                  <td data-label="Actions">
+                    <button className="edit-btn" onClick={() => handleEditProduct(p)}>Edit</button>
+                    <button className="delete-button" onClick={() => handleDeleteProduct(p._id)}>Delete</button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="6" style={{ textAlign: "center" }}>No products found</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+
+      </div>
     </div>
-  );
+  </div>
+);
 }

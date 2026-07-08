@@ -85,6 +85,35 @@
     font-size: 12px;
   }
 
+  .print-btn{
+    background: #3b82f6;
+    color: #ffffff;
+    padding: 6px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 13px;
+  }
+
+
+  .return-btn{
+    background: red;
+    color: #ffffff;
+    padding: 6px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 13px;
+  }
+
+  .paid-btn{
+    background: green;
+    color: #ffffff;
+    padding: 6px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 13px;
+  }
+
+
 @media print {
 
   body {
@@ -101,7 +130,15 @@
   /* Hide print button */
   .print-btn {
     display: none !important;
+
+  }
+  .return-btn {
+    display: none !important;
+
   }
 
- 
+  .paid-btn{
+    display: none !important;
+  }
+
 }

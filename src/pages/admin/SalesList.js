@@ -5,6 +5,7 @@ export default function SalesList() {
   const [sales, setSales] = useState([]);
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("dateDesc");
+  const [paymentFilter, setPaymentFilter] = useState("all");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
@@ -16,10 +17,11 @@ export default function SalesList() {
     })
       .then(res => res.json())
       .then(data => {
-        setSales(data.filter(o => (o.status === "completed" || o.status == "returned")));
+        setSales(data.filter(o => (o.status === "completed")));
       })
       .catch(err => console.error(err));
   };
+  
 
   useEffect(() => {
     fetchSales();
@@ -29,6 +31,13 @@ export default function SalesList() {
   let filteredSales = sales.filter(s =>
     (s.customerName || "Walk-in").toLowerCase().includes(search.toLowerCase())
   );
+
+    // Payment filter
+  if (paymentFilter !== "all") {
+    filteredSales = filteredSales.filter(
+      s => s.paymentMethod === paymentFilter
+    );
+  }
 
   // Date filters
   if (startDate)
@@ -40,6 +49,7 @@ export default function SalesList() {
     filteredSales = filteredSales.filter(
       s => new Date(s.createdAt) <= new Date(endDate)
     );
+
 
   // Compute profit and discount
   filteredSales = filteredSales.map(s => {
@@ -115,6 +125,17 @@ export default function SalesList() {
         </select>
       </div>
 
+
+      <select
+        value={paymentFilter}
+        onChange={e => setPaymentFilter(e.target.value)}
+        style={{ padding: "8px", borderRadius: "4px", border: "1px solid #ccc" }}
+      >
+        <option value="all">All Payments</option>
+        <option value="credit">Credit</option>
+        <option value="paid">Paid</option>
+      </select>
+
       <table className="table">
         <thead>
           <tr>
@@ -125,6 +146,7 @@ export default function SalesList() {
             <th>Total Amount</th>
             <th>Status</th>
             <th>Date</th>
+            <th>Payment</th>
             <th></th>
           </tr>
         </thead>
@@ -139,7 +161,8 @@ export default function SalesList() {
                 <td>Rs {s.computedDiscount.toFixed(2)} ({s.discount || 0}%)</td>
                 <td>Rs {s.totalAmount}</td>
                 <td>{s.status}</td>
-                <td>{new Date(s.createdAt).toLocaleString()}</td>
+                <td>{new Date(s.saledAt).toLocaleString()}</td>
+                <td>{s.paymentMethod}</td>
                 <td>
                   {/* Customer Detail button using order ID */}
                   <Link to={`/admin/customers/${s._id}`}>

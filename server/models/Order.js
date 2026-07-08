@@ -1,39 +1,61 @@
 const mongoose = require("mongoose");
 
+const orderItemSchema = new mongoose.Schema({
+  productId: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+  productName: String,
+
+  slabLabel: String,
+  gramsUsed: Number,
+
+  quantity: { type: Number, required: true },
+
+  salePrice: Number,
+  purchaseCost: Number,
+  profit: Number
+});
+
 const orderSchema = new mongoose.Schema(
   {
-    customerName: { type: String, default: "Walk-in" },
-    customerPhone: { type: String, default: "" },
-    customerAddress: { type: String, default: "" },
+    customerName: String,
+    customerPhone: String,
+    customerAddress: String,
 
-    items: [
-      {
-        productId: { type: mongoose.Schema.Types.ObjectId, ref: "Product", required: true },
-        name: { type: String, required: true },
-        quantity: { type: Number, required: true },
-        salePrice: { type: Number, required: true },
-        purchasePrice: { type: Number, required: true },
-        total: { type: Number, required: true },
-      },
-    ],
+    items: [orderItemSchema],
 
-    subtotal: { type: Number, required: true, default: 0 },
-    profitAmount: { type: Number, required: true, default: 0 },
-    profitPercent: { type: Number, required: true, default: 0 },
+    subtotal: Number,
+    
+    discount: {
+      type: Number,
+      default: 0
+    },
 
-    discount: { type: Number, default: 0 },
-    discountAmount: { type: Number, required: true, default: 0 },
+    discountAmount: {
+      type: Number,
+      default: 0
+    },
 
-    tax: { type: Number, default: 0 },
-    totalAmount: { type: Number, required: true, default: 0 },
+    profitAmount: {
+      type: Number,
+      required: true
+    },
 
-    paymentMethod: { type: String, enum: ["cash", "online"], default: "cash" },
-    returnedAt: { type: Date },
+    profitPercentage: {
+      type: Number,
+      required: true
+    },
+
+    totalAmount: Number,
+
+    paymentMethod: { type: String, enum: ["paid", "credit"] },
+
     status: {
       type: String,
-      enum: ["pending", "completed", "returned"],
-      default: "pending",
+      enum: ["completed", "pending", "returned"],
+      default: "pending"
     },
+    saledAt: Date,
+    paidAt: Date,
+    returnedAt: Date
   },
   { timestamps: true }
 );

@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import "../../styles/admin/SaleReceipt.css";
 
 export default function SaleReceipt() {
   const { id } = useParams();
+   const navigate = useNavigate();
   const [sale, setSale] = useState(null);
   const [error, setError] = useState("");
   const token = localStorage.getItem("token");
@@ -29,6 +30,8 @@ export default function SaleReceipt() {
     };
   }, [id, token]);
 
+
+
   const printReceipt = () => window.print();
 
   const returnSale = async () => {
@@ -48,36 +51,51 @@ export default function SaleReceipt() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
 
-      setSale(data.order);
+      setSale(data);
       alert("Sale returned successfully");
+      navigate(`/admin/sales/${id}`)
+
     } catch (err) {
       alert(err.message || "Return failed");
     }
   };
 
 
+
+  const paymentDone = async () => {
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/orders/${id}/pay`,
+        {
+          method: "PATCH",
+          headers: {
+            "x-auth-token": token,
+          },
+        }
+      );
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
+
+      setSale(data);
+
+      alert("Payment marked as paid.");
+    } catch (err) {
+      alert(err.message || "Failed to update payment.");
+    }
+  };
+
   if (error) return <p style={{ color: "red" }}>{error}</p>;
   if (!sale) return <p>Loading receipt...</p>;
 
   const isReturn = sale.status === "returned";
+  const isPaid = sale.paymentMethod == "paid"
 
-  const profitPercent = Number(sale.profit || 0);
-  const discountPercent = Number(sale.discount || 0);
+  const items = sale.items;
+  const subtotal = sale.subtotal;
+  const totalAmount = sale.totalAmount;
 
-  const items = sale.items.map(item => {
-    const baseTotal = item.price * item.quantity;
-    const profitAmount = baseTotal * (profitPercent / 100);
-    const totalWithProfit = baseTotal + profitAmount;
-    const discountAmount = totalWithProfit * (discountPercent / 100);
-
-    return {
-      ...item,
-      finalTotal: totalWithProfit - discountAmount
-    };
-  });
-
-  const subtotal = items.reduce((s, i) => s + i.finalTotal, 0);
-
+  
   return (
     <>
       <div style={{ marginBottom: "10px" }}>
@@ -86,6 +104,7 @@ export default function SaleReceipt() {
         </button>
 
         {!isReturn && (
+          <>
           <button
             className="return-btn"
             onClick={returnSale}
@@ -93,6 +112,17 @@ export default function SaleReceipt() {
           >
             Return Sale
           </button>
+
+          {!isPaid && (
+          <button
+            className="paid-btn"
+            onClick={paymentDone}
+            style={{ marginLeft: "10px", background: "green", color: "white" }}
+            >
+              Paid
+          </button>
+          )}
+          </>
         )}
       </div>
 
@@ -118,7 +148,7 @@ export default function SaleReceipt() {
           </div>
           <div>
             <p><strong>Cashier:</strong> Admin</p>
-            <p><strong>Date:</strong> {new Date(sale.createdAt).toLocaleString()}</p>
+            <p><strong>Date:</strong> {sale.saledAt}</p>
           </div>
         </div>
 
@@ -128,35 +158,53 @@ export default function SaleReceipt() {
             <tr>
               <th>#</th>
               <th>Item</th>
+              <th>Price</th>
               <th>Qty</th>
               <th>Total</th>
             </tr>
           </thead>
           <tbody>
-            {items.map((item, i) => (
+            {items.map((item, i) => {
+              return (
               <tr key={item.productId}>
                 <td>{i + 1}</td>
-                <td>{item.name}</td>
+                <td>{item.productName} ({item.slabLabel})</td>
+                <td>Rs {item.salePrice.toFixed(2)}</td> 
                 <td>{item.quantity}</td>
-                <td>
-                  Rs {isReturn ? `-${item.finalTotal.toFixed(2)}` : item.finalTotal.toFixed(2)}
+                <td>  Rs {isReturn ? `-${(item.salePrice * item.quantity).toFixed(2)}` : (item.salePrice * item.quantity).toFixed(2)}
                 </td>
               </tr>
-            ))}
+              );
+})}
           </tbody>
         </table>
 
         <hr />
 
-        {/* TOTAL */}
-        <div className="payment-detail">
-          <p className="grand-total">
-            <span>{isReturn ? "Refunded Amount" : "Final Paid"}</span>
-            <span>
-              Rs {isReturn ? `-${subtotal.toFixed(2)}` : subtotal.toFixed(2)}
-            </span>
-          </p>
-        </div>
+
+
+      <div className="payment-detail">
+        <p>
+          <span>Subtotal</span>
+          <span>Rs {sale.subtotal.toFixed(2)}</span>
+        </p>
+
+        <p>
+          <span>Discount</span>
+          <span>Rs {sale.discountAmount.toFixed(2)}</span>
+        </p>
+
+        <p className="grand-total">
+          <span>{isReturn ? "Refunded Amount" : "Final Paid"}</span>
+          <span>
+            Rs {isReturn
+              ? `-${sale.totalAmount.toFixed(2)}`
+              : sale.totalAmount.toFixed(2)}
+          </span>
+        </p>
+      </div>
+
+
 
         <hr />
 

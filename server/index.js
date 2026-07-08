@@ -23,6 +23,7 @@ app.use("/api/admin", require("./routes/admin"));
 app.use("/api/products", require("./routes/products"));
 app.use("/api/orders", require("./routes/orders"));
 app.use("/api/packing", require("./routes/packing"));
+app.use("/api/inventory", require("./routes/inventory"));
 
 // Start server
 const PORT = process.env.PORT || 5000;

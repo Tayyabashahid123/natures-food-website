@@ -4,30 +4,33 @@ exports.getPackingList = async (req, res) => {
   try {
     const orders = await Order.find({ status: "pending" });
 
-    if (!orders || orders.length === 0) return res.json([]);
+    if (!orders.length) return res.json([]);
 
     const packingMap = {};
 
     orders.forEach(order => {
       order.items.forEach(item => {
-        const key = item.name.toLowerCase();
+        const key = `${item.productName}-${item.slabLabel}`;
 
         if (!packingMap[key]) {
           packingMap[key] = {
-            name: item.name,
-            totalQuantity: 0,
+            productName: item.productName,
+            slabLabel: item.slabLabel,
+            packets: 0,
+            totalGrams: 0,
             customers: []
           };
         }
 
-        packingMap[key].totalQuantity += item.quantity;
+        packingMap[key].packets += item.quantity;
+        packingMap[key].totalGrams += item.quantity * item.gramsUsed;
         packingMap[key].customers.push(order.customerName || "Walk-in");
       });
     });
 
     res.json(Object.values(packingMap));
   } catch (err) {
-    console.error(err);
+    console.error("Packing error:", err);
     res.status(500).json([]);
   }
 };
