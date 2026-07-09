@@ -1,70 +1,326 @@
-# Getting Started with Create React App
+# 🌿 Nature's Food - Inventory & Sales Management System
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A full-stack inventory and sales management system built for a spice business. The application allows administrators to manage products, inventory, orders, customers, sales, returns, and payments through a modern web interface.
 
-## Available Scripts
+## 🚀 Features
 
-In the project directory, you can run:
+### Dashboard analytic
+- show a short summary of monthly progress
+- average monthly sale
+- avg monthly order value
+- total sale
+- total orders
+- pending orders
+- products sold
+- sale trend
+- recent orders
+- products out of stock
 
-### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 📦 Product Management
+- Add, edit and delete products
+- Upload product images
+- Categorize products
+- Manage stock in grams
+- Support multiple packet sizes (slabs) per product
+- Custom pricing for every slab
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Example slabs:
+- 20g
+- 50g
+- 100g
+- 250g
+- 500g
+- 1kg
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 📊 Inventory Management
 
-### `npm run build`
+- Live inventory tracking
+- Stock stored in grams
+- Stock-In functionality
+- Inventory history
+- Search products
+- Sort by:
+  - Name
+  - Stock level
+- Low stock detection
+- Out of stock detection
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 🛒 Order Management
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- Create customer orders
+- Walk-in customers supported
+- Multiple products per order
+- Quantity management
+- Automatic stock deduction
+- Order editing
+- Order status management
 
-### `npm run eject`
+Order Status:
+- Pending
+- Completed
+- Returned
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 💰 Pricing & Calculations
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Automatically calculates:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- Subtotal
+- Discount
+- Discount Amount
+- Profit Percentage
+- Profit Amount
+- Final Total
 
-## Learn More
+Supports custom profit percentages and discounts.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### 💳 Payment Management
 
-### Code Splitting
+Payment methods:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- Credit
+- Paid
 
-### Analyzing the Bundle Size
+Features:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- Mark credit orders as paid
+- Payment tracking
+- Payment status displayed on receipts and sales history
 
-### Making a Progressive Web App
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### 🧾 Receipt System
 
-### Advanced Configuration
+Generate printable receipts for:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- Completed Sales
+- Returned Sales
 
-### Deployment
+Receipt includes:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+- Customer Information
+- Products
+- Quantities
+- Prices
+- Payment Method
+- Sale Date
+- Grand Total
 
-### `npm run build` fails to minify
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### 🔄 Sale Returns
+
+Return completed sales.
+
+Features:
+
+- Restore inventory automatically
+- Generate return receipt
+- Store return date
+- Track returned sales separately
+
+---
+
+### 📈 Sales History
+
+View complete sales history.
+
+Includes:
+
+- Customer search
+- Date range filtering
+- Sorting
+- Profit information
+- Discount information
+- Payment method
+- Receipt viewing
+
+---
+
+### 📋 Returned Sales
+
+Dedicated page showing:
+
+- Returned orders
+- Refund amount
+- Return date
+- Customer details
+- Return receipt
+
+---
+
+### 👤 Customer Details
+
+View customer information including:
+
+- Name
+- Phone Number
+- Address
+- Order history
+
+---
+
+## 🛠 Tech Stack
+
+### Frontend
+
+- React.js
+- React Router
+- JavaScript (ES6)
+- CSS3
+
+### Backend
+
+- Node.js
+- Express.js
+
+### Database
+
+- MongoDB Atlas
+- Mongoose
+
+### Authentication
+
+- JWT Authentication
+
+---
+
+
+## 📦 Database Models
+
+### Product
+
+- Name
+- Category
+- Image
+- Stock (grams)
+- Slabs
+  - Label
+  - Sale Price
+  - Purchase Cost
+
+---
+
+### Order
+
+- Customer Information
+- Ordered Items
+- Subtotal
+- Discount
+- Discount Amount
+- Profit Percentage
+- Profit Amount
+- Total Amount
+- Payment Method
+- Status
+- Sale Date
+- Return Date
+
+---
+
+## 🔐 Admin Features
+
+- Secure Login
+- Protected Routes
+- JWT Authentication
+
+---
+
+## 📱 Responsive Design
+
+The application is designed to work on:
+
+- Desktop
+- Laptop
+- Tablet
+- Mobile
+
+---
+
+## 📷 Screens
+
+- Dashboard
+- Products
+- Inventory
+- Stock In
+- Inventory History
+- Orders
+- Sales History
+- Returned Sales
+- Customer Details
+- Printable Receipt
+
+---
+
+## ⚙ Installation
+
+### Clone repository
+
+```bash
+git clone https://github.com/yourusername/natures-food.git
+```
+
+### Frontend
+
+```bash
+cd client
+npm install
+npm start
+```
+
+### Backend
+
+```bash
+cd server
+npm install
+npm run dev
+```
+
+---
+
+## Environment Variables
+
+Create a `.env` file inside the server folder.
+
+Example:
+
+```env
+PORT=5000
+
+MONGO_URI=your_mongodb_connection
+
+JWT_SECRET=your_secret
+```
+
+---
+
+## Future Improvements
+
+- Charts & graphs
+- Barcode support
+- Email receipts
+- Backup & restore
+- Cloud image storage (AWS S3 / Cloudinary)
+
+---
+
+## Author
+
+**Tayyaba Shahid**
+
+Full Stack Software Developer
+
+Built using:
+
+- React.js
+- Node.js
+- Express.js
+- MongoDB
