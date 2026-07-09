@@ -196,10 +196,10 @@ return (
             <input value={category} onChange={(e) => setCategory(e.target.value)} />
           </div>
 
-          <div className="form-group">
+          {/* <div className="form-group">
             <label>Image</label>
             <input type="file" accept="image/*" onChange={(e) => setImage(e.target.files[0])} />
-          </div>
+          </div> */}
         </div>
 
         <h4>Slabs</h4>
@@ -254,7 +254,7 @@ return (
               <th>Name</th>
               <th>Stock</th>
               <th>Category</th>
-              <th>Image</th>
+              {/* <th>Image</th> */}
               <th>Slabs</th>
               <th>Actions</th>
             </tr>
@@ -266,16 +266,17 @@ return (
                   <td data-label="Name">{p.name}</td>
                   <td data-label="Stock">{p.stockGrams} g</td>
                   <td data-label="Category">{p.category || "-"}</td>
-                  <td data-label="Image">
+                  {/* <td data-label="Image">
                     {p.image ? (
                       <img src={`http://localhost:5000/${p.image}`} alt={p.name} />
                     ) : "-"}
                   </td>
+                  */}
                   <td data-label="Slabs">
                     {p.slabs?.map((s, i) => (
                       <div key={i}>{s.label} — Rs {s.salePrice}</div>
                     ))}
-                  </td>
+                  </td> 
                   <td data-label="Actions">
                     <button className="edit-btn" onClick={() => handleEditProduct(p)}>Edit</button>
                     <button className="delete-button" onClick={() => handleDeleteProduct(p._id)}>Delete</button>
