@@ -10,6 +10,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import "../../styles/admin/Dashboard.css";
+import API_URL from "../../config.js";
 
 export default function Dashboard() {
   const [orders, setOrders] = useState([]);
@@ -28,15 +29,15 @@ export default function Dashboard() {
       return;
     }
 
-    const fetchOrders = fetch("http://localhost:5000/api/orders", {
+    const fetchOrders = fetch(`${API_URL}/api/orders`, {
       headers: { "x-auth-token": token },
     }).then((res) => res.json());
 
-    const fetchProducts = fetch("http://localhost:5000/api/products", {
+    const fetchProducts = fetch(`${API_URL}/api/products`, {
       headers: { "x-auth-token": token },
     }).then((res) => res.json());
 
-    const fetchAdmin = fetch("http://localhost:5000/api/admin/me", {
+    const fetchAdmin = fetch(`${API_URL}/api/admin/me`, {
       headers: { "x-auth-token": token },
     }).then((res) => res.json());
 

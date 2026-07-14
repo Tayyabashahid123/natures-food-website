@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../styles/admin/ReturnedSales.css";
+import API_URL from "../../config";
 
 export default function ReturnedSales() {
   const [sales, setSales] = useState([]);
@@ -18,7 +19,7 @@ export default function ReturnedSales() {
   useEffect(() => {
     const fetchReturned = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/orders", {
+        const res = await fetch(`${API_URL}/api/orders`, {
           headers: { "x-auth-token": token },
         });
 

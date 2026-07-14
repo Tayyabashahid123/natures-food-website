@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import "../../styles/admin/StockIn.css";
+import API_URL from "../../config";
 
 export default function StockIn({ onStockUpdate = () => {} }) {
   const [products, setProducts] = useState([]);
@@ -15,7 +16,7 @@ export default function StockIn({ onStockUpdate = () => {} }) {
 
   /* ================= FETCH PRODUCTS ================= */
   useEffect(() => {
-    fetch("http://localhost:5000/api/products", {
+    fetch(`${API_URL}/api/products`, {
       headers: { "x-auth-token": token },
     })
       .then(res => res.json())
@@ -73,7 +74,7 @@ export default function StockIn({ onStockUpdate = () => {} }) {
     const productId = selectedProduct._id; // IMPORTANT FIX
 
     const res = await fetch(
-      "http://localhost:5000/api/inventory/stock-in",
+      `${API_URL}/api/inventory/stock-in`,
       {
         method: "POST",
         headers: {

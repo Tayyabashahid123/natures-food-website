@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/admin/orders.css";
+import API_URL from "../../config";
 
 export default function OrdersList() {
   const [orders, setOrders] = useState([]);
@@ -8,7 +9,7 @@ export default function OrdersList() {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/orders", {
+    fetch(`${API_URL}/api/orders`, {
       headers: { "x-auth-token": token }
     })
       .then(res => res.json())

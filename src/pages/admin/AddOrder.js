@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "../../styles/admin/AddOrders.css";
+import API_URL from "../../config";
 
 export default function AddOrders() {
   const [products, setProducts] = useState([]);
@@ -11,7 +12,7 @@ export default function AddOrders() {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/products", {
+    fetch(`${API_URL}/api/products`, {
       headers: { "x-auth-token": token }
     })
       .then(res => res.json())
@@ -59,7 +60,7 @@ export default function AddOrders() {
   const submitOrder = async () => {
     if (!cart.length) return alert("Cart is empty");
 
-    const res = await fetch("http://localhost:5000/api/orders", {
+    const res = await fetch(`${API_URL}/api/orders`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

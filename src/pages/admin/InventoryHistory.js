@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import "../../styles/admin/InventoryHistory.css";
+import API_URL from "../../config";
 
 export default function InventoryHistory({ refreshTrigger }) {
   const [history, setHistory] = useState([]);
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/inventory/history", {
+    fetch(`${API_URL}/api/inventory/history`, {
       headers: { "x-auth-token": token }
     })
       .then(res => res.json())

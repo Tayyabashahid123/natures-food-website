@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { useCart } from "../context/CartContext";
 import "../styles/Shop.css";
+import API_URL from "../config.js";
 
 export default function Shop() {
 
@@ -11,7 +12,7 @@ export default function Shop() {
   const { addToCart } = useCart();
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/products")
+    fetch(`${API_URL}/api/products`)
       .then((res) => res.json())
       .then((data) => setProducts(data))
       .catch((err) => console.log(err));

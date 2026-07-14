@@ -5,6 +5,7 @@ import Footer from "../components/Footer";
 import { useCart } from "../context/CartContext";
 import "../styles/ProductDetail.css";
 import AddToCartModal from "../components/AddToCartModal";
+import API_URL from "../config.js";
 
 export default function ProductDetails() {
   const { id } = useParams();
@@ -16,12 +17,12 @@ export default function ProductDetails() {
 
   useEffect(() => {
     console.log("Fetching product with ID:", id);
-    fetch(`http://localhost:5000/api/products/${id}`)
+    fetch(`${API_URL}/api/products/${id}`)
       .then(res => res.json())
       .then(data => setProduct(data))
       .catch(err => console.log(err));
 
-    fetch(`http://localhost:5000/api/products`)
+    fetch(`${API_URL}/api/products`)
       .then(res => res.json())
       .then(data =>
         setRecommended(data.filter(p => p._id !== id).slice(0, 5))

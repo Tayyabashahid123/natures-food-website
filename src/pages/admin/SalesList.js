@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import API_URL from "../../config";
 
 export default function SalesList() {
   const [sales, setSales] = useState([]);
@@ -12,7 +13,7 @@ export default function SalesList() {
   const token = localStorage.getItem("token");
 
   const fetchSales = () => {
-    fetch("http://localhost:5000/api/orders", {
+    fetch(`${API_URL}/api/orders`, {
       headers: { "x-auth-token": token }
     })
       .then(res => res.json())

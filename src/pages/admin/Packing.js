@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../../styles/admin/Packing.css";
+import API_URL from "../../config";
 
 export default function Packing() {
   const [packingList, setPackingList] = useState([]);
@@ -11,7 +12,7 @@ export default function Packing() {
   useEffect(() => {
     if (!token) return;
 
-    fetch("http://localhost:5000/api/packing", {
+    fetch(`${API_URL}/api/packing`, {
       headers: { "x-auth-token": token }
     })
       .then(res => res.json())

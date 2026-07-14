@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "../../styles/admin.css";
+import API_URL from "../../config";
+
 
 // Simple icons using Unicode
 const PhoneIcon = () => <span className="icon">📞</span>;
@@ -17,7 +19,7 @@ export default function CustomerDetail() {
   useEffect(() => {
     const fetchCustomer = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/orders/${id}`, {
+        const res = await fetch(`${API_URL}/api/orders/${id}`, {
           headers: { "x-auth-token": token }
         });
         if (!res.ok) throw new Error("Failed to fetch order");

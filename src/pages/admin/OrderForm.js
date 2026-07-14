@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "../../styles/admin/orderForm.css";
+import API_URL from "../../config";
 
 export default function OrderForm() {
   const { id } = useParams();
@@ -24,14 +25,14 @@ export default function OrderForm() {
   /* ================= FETCH ================= */
   useEffect(() => {
     const load = async () => {
-      const res = await fetch("http://localhost:5000/api/products", {
+      const res = await fetch(`${API_URL}/api/products`, {
         headers: { "x-auth-token": token }
       });
       setProducts(await res.json());
 
       if (id) {
         const orderRes = await fetch(
-          `http://localhost:5000/api/orders/${id}`,
+          `${API_URL}/api/orders/${id}`,
           { headers: { "x-auth-token": token } }
         );
         const order = await orderRes.json();
@@ -127,8 +128,8 @@ export default function OrderForm() {
     try {
       const res = await fetch(
         id
-          ? `http://localhost:5000/api/orders/${id}`
-          : "http://localhost:5000/api/orders",
+          ? `${API_URL}/api/orders/${id}`
+          : `${API_URL}/api/orders`,
         {
           method: id ? "PUT" : "POST",
           headers: {

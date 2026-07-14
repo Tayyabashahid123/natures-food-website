@@ -8,6 +8,7 @@ import FeatureCard from "../components/FeatureCard";
 import Spices from "../assets/spices.jpeg";
 import heritage from "../assets/heritage.jpeg"
 import "../styles/Home.css"; 
+import API_URL from "../config.js";
 
 
 
@@ -16,7 +17,7 @@ export default function Home() {
     const { addToCart } = useCart();
 
     useEffect(() => {
-        fetch("http://localhost:5000/api/products")
+        fetch(`${API_URL}/api/products`)
         .then((res) => res.json())
         .then((data) => setProducts(data))
         .catch((err) => console.log(err));

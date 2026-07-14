@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "../../styles/admin/SaleReceipt.css";
+import API_URL from "../../config";
+
 
 export default function SaleReceipt() {
   const { id } = useParams();
@@ -12,7 +14,7 @@ export default function SaleReceipt() {
   useEffect(() => {
     document.body.classList.add("print-receipt");
 
-    fetch(`http://localhost:5000/api/orders/${id}`, {
+    fetch(`${API_URL}/api/orders/${id}`, {
       headers: { "x-auth-token": token }
     })
       .then(res => res.json())
@@ -39,7 +41,7 @@ export default function SaleReceipt() {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/api/orders/${id}/return`,
+        `${API_URL}/api/orders/${id}/return`,
         {
           method: "PATCH",
           headers: {
@@ -65,7 +67,7 @@ export default function SaleReceipt() {
   const paymentDone = async () => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/orders/${id}/pay`,
+        `${API_URL}/api/orders/${id}/pay`,
         {
           method: "PATCH",
           headers: {

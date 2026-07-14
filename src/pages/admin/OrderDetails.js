@@ -1,6 +1,7 @@
 import "../../styles/admin/OrderDetails.css";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import API_URL from "../../config";
 
 export default function OrderDetails() {
   const { id } = useParams();
@@ -37,10 +38,10 @@ export default function OrderDetails() {
     const fetchData = async () => {
       try {
         const [prodRes, orderRes] = await Promise.all([
-          fetch("http://localhost:5000/api/products", {
+          fetch(`${API_URL}/api/products`, {
             headers: { "x-auth-token": token },
           }),
-          fetch(`http://localhost:5000/api/orders/${id}`, {
+          fetch(`${API_URL}/api/orders/${id}`, {
             headers: { "x-auth-token": token },
           }),
         ]);
@@ -206,7 +207,7 @@ export default function OrderDetails() {
           items: order.items,
         };
 
-        const res = await fetch(`http://localhost:5000/api/orders/${id}`, {
+        const res = await fetch(`${API_URL}/api/orders/${id}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",

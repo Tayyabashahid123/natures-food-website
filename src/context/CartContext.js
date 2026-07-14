@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import API_URL from "../config.js";
 
 const CartContext = createContext();
 
@@ -18,7 +19,7 @@ export function CartProvider({ children }) {
   }, [cart]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/products")
+    fetch(`${API_URL}/api/products`)
       .then((res) => res.json())
       .then((data) => setProducts(data))
       .catch((err) => console.error("Error loading products:", err));

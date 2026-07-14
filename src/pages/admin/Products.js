@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "../../styles/admin/Products.css";
+import API_URL from "../../config";
 
 export default function Products() {
   const [products, setProducts] = useState([]);
@@ -26,7 +27,7 @@ export default function Products() {
   useEffect(() => {
     async function fetchProducts() {
       try {
-        const res = await fetch("http://localhost:5000/api/products", {
+        const res = await fetch(`${API_URL}/api/products`, {
           headers: { "x-auth-token": token },
         });
         const data = await res.json();
@@ -91,7 +92,7 @@ export default function Products() {
     formData.append("slabs", JSON.stringify(slabs));
     if (image) formData.append("image", image);
 
-    let url = "http://localhost:5000/api/products";
+    let url = `${API_URL}/api/product`;
     let method = "POST";
     if (editingId) {
       url += `/${editingId}`;
@@ -116,7 +117,7 @@ export default function Products() {
         setEditingId(null);
 
         // Refresh list
-        const res2 = await fetch("http://localhost:5000/api/products", {
+        const res2 = await fetch(`${API_URL}/api/products`, {
           headers: { "x-auth-token": token },
         });
         const data2 = await res2.json();
@@ -144,7 +145,7 @@ export default function Products() {
   const handleDeleteProduct = async (id) => {
     if (!window.confirm("Are you sure?")) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/products/${id}`, {
+      const res = await fetch(`${API_URL}/api/products/${id}`, {
         method: "DELETE",
         headers: { "x-auth-token": token },
       });
@@ -268,7 +269,7 @@ return (
                   <td data-label="Category">{p.category || "-"}</td>
                   {/* <td data-label="Image">
                     {p.image ? (
-                      <img src={`http://localhost:5000/${p.image}`} alt={p.name} />
+                      <img src={`${API_URL}/${p.image}`} alt={p.name} />
                     ) : "-"}
                   </td>
                   */}

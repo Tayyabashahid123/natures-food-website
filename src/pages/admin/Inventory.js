@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import StockIn from "./StockIn";
 import InventoryHistory from "./InventoryHistory";
 import "../../styles/admin/Inventory.css";
+import API_URL from "../../config";
 
 export default function Inventory() {
   const [refreshHistory, setRefreshHistory] = useState(0);
@@ -10,18 +11,9 @@ export default function Inventory() {
   const [sortBy, setSortBy] = useState("nameAsc");
   const token = localStorage.getItem("token");
 
-  // useEffect(() => {
-  //   fetch("http://localhost:5000/api/products", {
-  //     headers: { "x-auth-token": token }
-  //   })
-  //     .then(res => res.json())
-  //     .then(setProducts);
-  // }, [token]);
-
-
     const fetchProducts = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/products", {
+      const res = await fetch(`${API_URL}/api/products`, {
         headers: {
           "x-auth-token": token,
         },
