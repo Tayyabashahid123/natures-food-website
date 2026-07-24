@@ -110,7 +110,7 @@ export default function Dashboard() {
   });
 
   // ---------------- LOW STOCK ----------------
-  const lowStockProducts = products.filter((p) => (p.stockGrams || 0) <= 5);
+  const lowStockProducts = products.filter((p) => (p.stockGrams || 0) <= 300);
 
   return (
     <div className="dashboard-container">
@@ -214,7 +214,7 @@ export default function Dashboard() {
       </div>
 
       {/* LOW STOCK */}
-      {lowStockProducts.length > 0 && (
+      {lowStockProducts.length > 0  && (
         <div className="section warning-box">
           <h3>⚠ Low Stock Products</h3>
           <ul>

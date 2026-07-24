@@ -87,7 +87,7 @@ export default function Inventory() {
               const status =
                 p.stockGrams <= 0
                   ? "out"
-                  : p.stockGrams < 10
+                  : p.stockGrams < 300
                   ? "low"
                   : "good";
 

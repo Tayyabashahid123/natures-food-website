@@ -92,7 +92,7 @@ export default function Products() {
     formData.append("slabs", JSON.stringify(slabs));
     if (image) formData.append("image", image);
 
-    let url = `${API_URL}/api/product`;
+    let url = `${API_URL}/api/products`;
     let method = "POST";
     if (editingId) {
       url += `/${editingId}`;

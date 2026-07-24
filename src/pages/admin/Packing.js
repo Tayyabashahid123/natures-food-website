@@ -49,12 +49,25 @@ export default function Packing() {
       return 0;
     });
 
+    const handlePrint = () => {
+      window.print();
+    };
+
 return (
   <div className="packing-container">
-    <div className="packing-header">
+  <div className="packing-header">
+    <div>
       <h1>Packing List</h1>
       <p>Track packed quantities and customer orders</p>
     </div>
+
+    <button
+      className="print-btn"
+      onClick={handlePrint}
+    >
+      🖨 Print List
+    </button>
+  </div>
 
     <div className="packing-card">
       <div className="controls">
@@ -69,6 +82,10 @@ return (
           <option value="az">Sort: A - Z</option>
           <option value="qty">Sort: Highest Packets</option>
         </select>
+      </div>
+
+      <div className="print-date">
+        Generated: {new Date().toLocaleString()}
       </div>
 
       <table className="packing-table">

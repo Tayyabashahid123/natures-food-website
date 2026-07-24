@@ -162,8 +162,8 @@ export default function SalesList() {
                 <td>Rs {s.computedDiscount.toFixed(2)} ({s.discount || 0}%)</td>
                 <td>Rs {s.totalAmount}</td>
                 <td>{s.status}</td>
-                <td>{new Date(s.saledAt).toLocaleString()}</td>
-                <td>{s.paymentMethod}</td>
+                <td>{new Date(s.saledAt).toLocaleDateString("en-GB")}</td>
+                <td>  {s.paymentMethod}{" ("}{new Date(s.paidAt).toLocaleDateString("en-GB")}{")"}</td>
                 <td>
                   {/* Customer Detail button using order ID */}
                   <Link to={`/admin/customers/${s._id}`}>

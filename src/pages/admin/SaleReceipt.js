@@ -150,7 +150,33 @@ export default function SaleReceipt() {
           </div>
           <div>
             <p><strong>Cashier:</strong> Admin</p>
-            <p><strong>Date:</strong> {sale.saledAt}</p>
+            <p>
+              <strong>Sale Date:</strong>{" "}
+              {sale.saledAt &&
+                new Date(sale.saledAt).toLocaleString("en-GB", {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: true,
+                })}
+            </p>
+
+            {sale.paidAt && (
+              <p>
+                <strong>Paid Date:</strong>{" "}
+                {new Date(sale.paidAt).toLocaleString("en-GB", {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: true,
+                })}
+              </p>
+            )}
+
           </div>
         </div>
 
